@@ -1,0 +1,7 @@
+{
+  "name": "ProInvoice System",
+  "description": "A high-end, professional invoicing platform with a PayPal-inspired aesthetic. Manage clients, items, taxes, and professional branding with ease.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
