@@ -27,6 +27,31 @@ const styles = {
     alignItems: 'flex-start',
     gap: '1rem'
   },
+  statusBtn: {
+    padding: '0.25rem 0.5rem',
+    borderRadius: '9999px',
+    fontSize: '0.625rem',
+    fontWeight: 700,
+    cursor: 'pointer',
+    border: 'none',
+    marginLeft: '0.5rem'
+  },
+  statusBtnSuccess: {
+    backgroundColor: '#dcfce7',
+    color: '#166534'
+  },
+  statusBtnWarning: {
+    backgroundColor: '#fef3c7',
+    color: '#92400e'
+  },
+  printBtn: {
+    color: '#6b7280',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: 700,
+    fontSize: '0.875rem'
+  },
   title: {
     fontSize: '1.875rem',
     fontWeight: 800,
@@ -224,6 +249,25 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const handleStatusToggle = async (id: string, currentStatus: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newStatus = currentStatus === InvoiceStatus.PAID ? InvoiceStatus.DRAFT : InvoiceStatus.PAID;
+    
+    try {
+      const { error } = await supabase
+        .from('invoices')
+        .update({ status: newStatus })
+        .eq('id', id);
+      
+      if (error) throw error;
+      setInvoices(invoices.map(inv => 
+        inv.id === id ? { ...inv, status: newStatus } : inv
+      ));
+    } catch (err) {
+      console.error('Error updating status:', err);
+    }
+  };
+
   const getStatusStyle = (status: string) => {
     switch (status) {
       case InvoiceStatus.PAID:
@@ -316,10 +360,27 @@ const DashboardPage: React.FC = () => {
                         }).format(invoice.total)}
                       </span>
                     </td>
-                    <td style={{ ...styles.td, textAlign: 'center' }}>
+                    <td style={{ ...styles.td, textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
                       <span style={{ ...styles.statusBadge, ...getStatusStyle(invoice.status) }}>
                         {invoice.status}
                       </span>
+                      {invoice.status === InvoiceStatus.DRAFT ? (
+                        <button
+                          onClick={(e) => handleStatusToggle(invoice.id, invoice.status, e)}
+                          style={{ ...styles.statusBtn, ...styles.statusBtnSuccess }}
+                          title="Marcar como Paga"
+                        >
+                          ✓ Paga
+                        </button>
+                      ) : invoice.status === InvoiceStatus.PAID ? (
+                        <button
+                          onClick={(e) => handleStatusToggle(invoice.id, invoice.status, e)}
+                          style={{ ...styles.statusBtn, ...styles.statusBtnWarning }}
+                          title="Voltar para Rascunho"
+                        >
+                          ↺ Rascunho
+                        </button>
+                      ) : null}
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }} onClick={(e) => e.stopPropagation()}>
                       <button

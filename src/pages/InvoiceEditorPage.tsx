@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/src/integrations/supabase/client';
-import { InvoiceStatus, Invoice, InvoiceItem } from '@/src/types';
+import { InvoiceStatus, Invoice, InvoiceItem, Client } from '@/src/types';
 
 const AutoResizeTextarea: React.FC<{
   value: string;
@@ -9,7 +9,8 @@ const AutoResizeTextarea: React.FC<{
   placeholder?: string;
   className?: string;
   rows?: number;
-}> = ({ value, onChange, placeholder, className, rows = 1 }) => {
+  style?: React.CSSProperties;
+}> = ({ value, onChange, placeholder, className, rows = 1, style }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const adjustHeight = () => {
@@ -33,8 +34,336 @@ const AutoResizeTextarea: React.FC<{
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onInput={adjustHeight}
+      style={style}
     />
   );
+};
+
+const styles = {
+  container: {
+    maxWidth: '960px',
+    margin: '0 auto',
+    paddingBottom: '6rem'
+  },
+  actionBar: {
+    display: 'flex',
+    flexWrap: 'wrap' as const,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '1rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '1rem',
+    padding: '1rem',
+    position: 'sticky' as const,
+    top: '80px',
+    zIndex: 40,
+    marginBottom: '2rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+  },
+  backBtn: {
+    color: '#4b5563',
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.875rem'
+  },
+  actionBtns: {
+    display: 'flex',
+    gap: '0.75rem',
+    flexWrap: 'wrap' as const
+  },
+  btnSecondary: {
+    backgroundColor: 'transparent',
+    color: '#2563eb',
+    padding: '0.5rem 1rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    border: '2px solid #2563eb',
+    cursor: 'pointer',
+    fontSize: '0.75rem'
+  },
+  btnPrimary: {
+    backgroundColor: '#2563eb',
+    color: '#ffffff',
+    padding: '0.5rem 1rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.75rem',
+    boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)'
+  },
+  btnSuccess: {
+    backgroundColor: '#16a34a',
+    color: '#ffffff',
+    padding: '0.5rem 1rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.75rem'
+  },
+  btnWarning: {
+    backgroundColor: '#f59e0b',
+    color: '#ffffff',
+    padding: '0.5rem 1rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.75rem'
+  },
+  invoiceCard: {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '1rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    padding: '2.5rem',
+    marginBottom: '2rem'
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '2rem'
+  },
+  logoBox: {
+    width: '100px',
+    height: '100px',
+    backgroundColor: '#f9fafb',
+    border: '2px dashed #e5e7eb',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    position: 'relative' as const,
+    borderRadius: '8px'
+  },
+  logoImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain' as const
+  },
+  invoiceTitle: {
+    fontSize: '2.5rem',
+    fontWeight: 900,
+    color: '#111827',
+    letterSpacing: '-0.05em',
+    textTransform: 'uppercase' as const,
+    marginBottom: '0.5rem',
+    textAlign: 'right' as const
+  },
+  labelSmall: {
+    fontSize: '0.625rem',
+    fontWeight: 800,
+    color: '#9ca3af',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.15em'
+  },
+  inputGhost: {
+    width: '100%',
+    padding: '0.25rem 0',
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderBottom: '1px dashed transparent',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none'
+  },
+  inputLarge: {
+    fontSize: '1.25rem',
+    fontWeight: 800,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '-0.025em'
+  },
+  divider: {
+    borderTop: '2px solid #111827',
+    margin: '1.5rem 0'
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '2rem',
+    marginBottom: '1.5rem'
+  },
+  section: {
+    marginBottom: '1rem'
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse' as const,
+    marginBottom: '1.5rem'
+  },
+  th: {
+    backgroundColor: '#1e293b',
+    color: '#ffffff',
+    padding: '0.75rem',
+    fontSize: '0.625rem',
+    fontWeight: 800,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em',
+    textAlign: 'left' as const
+  },
+  td: {
+    padding: '0.75rem',
+    borderBottom: '1px solid #f3f4f6',
+    verticalAlign: 'top' as const
+  },
+  totalsContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: '1.5rem'
+  },
+  totalsBox: {
+    width: '250px'
+  },
+  totalRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0.5rem 0',
+    borderBottom: '1px solid #f3f4f6'
+  },
+  totalFinal: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0.75rem 0',
+    borderTop: '3px double #111827',
+    marginTop: '0.5rem'
+  },
+  totalLabel: {
+    fontSize: '0.625rem',
+    fontWeight: 800,
+    color: '#9ca3af',
+    textTransform: 'uppercase' as const
+  },
+  totalValue: {
+    fontWeight: 800,
+    color: '#111827'
+  },
+  totalFinalValue: {
+    fontSize: '1.5rem',
+    fontWeight: 900,
+    color: '#111827'
+  },
+  notesSection: {
+    marginTop: '1.5rem',
+    paddingTop: '1rem',
+    borderTop: '1px solid #e5e7eb'
+  },
+  addItemBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    color: '#2563eb',
+    fontWeight: 800,
+    fontSize: '0.75rem',
+    textTransform: 'uppercase' as const,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    marginTop: '1rem'
+  },
+  removeBtn: {
+    color: '#ef4444',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '0.25rem'
+  },
+  settingsCard: {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '1rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    padding: '2rem'
+  },
+  settingsTitle: {
+    fontSize: '1.25rem',
+    fontWeight: 800,
+    color: '#111827',
+    marginBottom: '1.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem'
+  },
+  settingsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1.5rem'
+  },
+  input: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  },
+  select: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  },
+  textarea: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    resize: 'vertical' as const,
+    boxSizing: 'border-box' as const,
+    minHeight: '80px'
+  },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '5rem 0'
+  },
+  spinner: {
+    width: '32px',
+    height: '32px',
+    border: '4px solid #e5e7eb',
+    borderTopColor: '#2563eb',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite'
+  },
+  clientDropdown: {
+    position: 'absolute' as const,
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+    zIndex: 50,
+    maxHeight: '200px',
+    overflowY: 'auto' as const
+  },
+  clientOption: {
+    padding: '0.75rem 1rem',
+    cursor: 'pointer',
+    borderBottom: '1px solid #f3f4f6',
+    fontSize: '0.875rem'
+  }
 };
 
 const InvoiceEditorPage: React.FC = () => {
@@ -42,6 +371,9 @@ const InvoiceEditorPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(!!id);
   const [saving, setSaving] = useState(false);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [showClientDropdown, setShowClientDropdown] = useState(false);
+  const [clientSearch, setClientSearch] = useState('');
   
   const [invoice, setInvoice] = useState<Invoice>({
     id: crypto.randomUUID(),
@@ -63,6 +395,7 @@ const InvoiceEditorPage: React.FC = () => {
   });
 
   useEffect(() => {
+    loadClients();
     if (id) {
       loadInvoice(id);
     } else {
@@ -73,6 +406,20 @@ const InvoiceEditorPage: React.FC = () => {
   useEffect(() => {
     calculateTotals();
   }, [invoice.items, invoice.taxRate, invoice.discount]);
+
+  const loadClients = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      setClients(data || []);
+    } catch (err) {
+      console.error('Error loading clients:', err);
+    }
+  };
 
   const loadProfileDefaults = async () => {
     try {
@@ -103,7 +450,6 @@ const InvoiceEditorPage: React.FC = () => {
         }));
       }
 
-      // Load last invoice for pre-config
       const { data: lastInvoice } = await supabase
         .from('invoices')
         .select('*')
@@ -242,6 +588,36 @@ const InvoiceEditorPage: React.FC = () => {
     }
   };
 
+  const handleSelectClient = (client: Client) => {
+    setInvoice({
+      ...invoice,
+      client: {
+        id: client.id,
+        name: client.name,
+        email: client.email || '',
+        address: client.address || '',
+        phone: client.phone || '',
+      },
+    });
+    setShowClientDropdown(false);
+    setClientSearch('');
+  };
+
+  const handleStatusChange = async (newStatus: InvoiceStatus) => {
+    setInvoice({ ...invoice, status: newStatus });
+    
+    if (id) {
+      try {
+        await supabase
+          .from('invoices')
+          .update({ status: newStatus })
+          .eq('id', id);
+      } catch (err) {
+        console.error('Error updating status:', err);
+      }
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -260,6 +636,7 @@ const InvoiceEditorPage: React.FC = () => {
         company_address: invoice.company.address || null,
         company_website: invoice.company.web || null,
         company_logo_url: invoice.company.logoUrl || null,
+        client_id: invoice.client.id || null,
         client_name: invoice.client.name || null,
         client_email: invoice.client.email || null,
         client_phone: invoice.client.phone || null,
@@ -284,7 +661,6 @@ const InvoiceEditorPage: React.FC = () => {
         if (error) throw error;
         invoiceId = id;
 
-        // Delete existing items and re-insert
         await supabase.from('invoice_items').delete().eq('invoice_id', id);
       } else {
         const { data, error } = await supabase
@@ -296,7 +672,6 @@ const InvoiceEditorPage: React.FC = () => {
         invoiceId = data.id;
       }
 
-      // Insert items
       const itemsData = invoice.items.map((item, index) => ({
         invoice_id: invoiceId,
         description: item.description,
@@ -317,312 +692,338 @@ const InvoiceEditorPage: React.FC = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
     return `${day}/${month}/${year}`;
   };
 
+  const filteredClients = clients.filter(c => 
+    c.name.toLowerCase().includes(clientSearch.toLowerCase()) ||
+    (c.email && c.email.toLowerCase().includes(clientSearch.toLowerCase()))
+  );
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <div style={styles.loadingContainer}>
+        <div style={styles.spinner}></div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-24">
+    <div style={styles.container}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media print {
+          .no-print { display: none !important; }
+          body { background: white !important; margin: 0; padding: 0; }
+          .invoice-print { 
+            box-shadow: none !important; 
+            border: none !important; 
+            padding: 15mm !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            transform: scale(0.9);
+            transform-origin: top left;
+          }
+          @page { margin: 0; size: A4; }
+        }
+      `}</style>
+
       {/* Action Bar */}
-      <div className="no-print flex flex-col sm:flex-row justify-between items-center gap-4 card p-4 sticky top-20 z-40">
-        <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-2">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      <div style={styles.actionBar} className="no-print">
+        <button onClick={() => navigate('/')} style={styles.backBtn}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Voltar ao Painel
+          Voltar
         </button>
-        <div className="flex gap-4">
-          <button onClick={() => window.print()} className="btn-secondary">
-            Imprimir / PDF
+        <div style={styles.actionBtns}>
+          {invoice.status === InvoiceStatus.DRAFT && (
+            <button 
+              onClick={() => handleStatusChange(InvoiceStatus.PAID)} 
+              style={styles.btnSuccess}
+            >
+              ✓ Marcar como Paga
+            </button>
+          )}
+          {invoice.status === InvoiceStatus.PAID && (
+            <button 
+              onClick={() => handleStatusChange(InvoiceStatus.DRAFT)} 
+              style={styles.btnWarning}
+            >
+              ↺ Voltar para Rascunho
+            </button>
+          )}
+          <button onClick={handlePrint} style={styles.btnSecondary}>
+            🖨️ Imprimir / PDF
           </button>
-          <button onClick={handleSave} disabled={saving} className="btn-primary">
+          <button onClick={handleSave} disabled={saving} style={styles.btnPrimary}>
             {saving ? 'Salvando...' : 'Salvar Fatura'}
           </button>
         </div>
       </div>
 
-      {/* Invoice Document */}
-      <div className="invoice-card card min-h-[1100px] overflow-visible p-16 print:p-0 print:border-none print:shadow-none">
-        {/* Header: Logo and Title */}
-        <div className="flex justify-between items-start mb-16">
-          <div className="relative group w-36 h-36 bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center cursor-pointer hover:border-blue-400 transition-all print:border-none print:bg-transparent">
+      {/* Invoice Document - Optimized for single page PDF */}
+      <div style={styles.invoiceCard} className="invoice-print">
+        {/* Header */}
+        <div style={styles.header}>
+          <div style={styles.logoBox}>
             {invoice.company.logoUrl ? (
-              <img src={invoice.company.logoUrl} alt="Logo" className="w-full h-full object-contain" />
+              <img src={invoice.company.logoUrl} alt="Logo" style={styles.logoImg} />
             ) : (
-              <div className="text-center no-print">
-                <span className="text-gray-400 text-xs font-bold">Logo Empresa</span>
-              </div>
+              <span style={{ color: '#9ca3af', fontSize: '0.75rem' }} className="no-print">Logo</span>
             )}
             <input
               type="file"
-              className="absolute inset-0 opacity-0 cursor-pointer no-print"
+              style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
               onChange={handleLogoUpload}
               accept="image/*"
+              className="no-print"
             />
           </div>
-
-          <div className="text-right">
-            <h1 className="text-6xl font-black text-gray-900 tracking-tighter uppercase mb-2">INVOICE</h1>
-            <div className="flex flex-col items-end">
-              <span className="text-gray-400 text-sm font-black tracking-widest uppercase">Número</span>
+          <div style={{ textAlign: 'right' }}>
+            <h1 style={styles.invoiceTitle}>INVOICE</h1>
+            <div style={{ marginBottom: '0.25rem' }}>
+              <span style={styles.labelSmall}>Nº </span>
               <input
-                className="input-ghost text-2xl font-bold text-gray-800 text-right w-48"
+                style={{ ...styles.inputGhost, width: '140px', textAlign: 'right', fontWeight: 700 }}
                 value={invoice.invoiceNumber}
                 onChange={(e) => setInvoice({ ...invoice, invoiceNumber: e.target.value })}
-                placeholder="00000000"
               />
             </div>
           </div>
         </div>
 
-        <div className="border-t-2 border-gray-900 mb-12"></div>
+        <div style={styles.divider}></div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-12 gap-12 mb-16">
-          <div className="col-span-7 space-y-10">
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">DE:</p>
-              <input
-                className="input-ghost text-2xl font-black text-gray-900 uppercase tracking-tight placeholder-gray-200"
-                placeholder="NOME DA SUA EMPRESA"
-                value={invoice.company.name}
-                onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
-              />
-              <AutoResizeTextarea
-                className="input-ghost text-sm text-gray-500 leading-relaxed placeholder-gray-200"
-                placeholder="Endereço Completo da Empresa"
-                value={invoice.company.address}
-                onChange={(val) => setInvoice({ ...invoice, company: { ...invoice.company, address: val } })}
-              />
-              <div className="grid grid-cols-2 gap-x-4 pt-2 text-sm text-gray-500 font-medium">
-                <div className="flex gap-2">
-                  <span className="text-gray-400 font-bold uppercase text-[10px] self-center">Tel:</span>
-                  <input
-                    className="input-ghost p-0"
-                    placeholder="Seu Telefone"
-                    value={invoice.company.phone}
-                    onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, phone: e.target.value } })}
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-gray-400 font-bold uppercase text-[10px] self-center">Email:</span>
-                  <input
-                    className="input-ghost p-0"
-                    placeholder="Seu E-mail"
-                    value={invoice.company.email}
-                    onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, email: e.target.value } })}
-                  />
-                </div>
-                <div className="flex gap-2 col-span-2 mt-1">
-                  <span className="text-gray-400 font-bold uppercase text-[10px] self-center">Web:</span>
-                  <input
-                    className="input-ghost p-0"
-                    placeholder="www.suaempresa.com.br"
-                    value={invoice.company.web}
-                    onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, web: e.target.value } })}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-4">
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">FATURAR PARA:</p>
-              <input
-                className="input-ghost text-2xl font-black text-gray-900 uppercase tracking-tight placeholder-gray-200"
-                placeholder="NOME DO CLIENTE"
-                value={invoice.client.name}
-                onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, name: e.target.value } })}
-              />
-              <AutoResizeTextarea
-                className="input-ghost text-lg text-gray-500 leading-tight placeholder-gray-200"
-                placeholder="Empresa do Cliente"
-                value={invoice.client.address}
-                onChange={(val) => setInvoice({ ...invoice, client: { ...invoice.client, address: val } })}
-              />
-              <input
-                className="input-ghost text-sm text-gray-400 mt-1 placeholder-gray-200"
-                placeholder="email@cliente.com"
-                value={invoice.client.email}
-                onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, email: e.target.value } })}
-              />
-            </div>
+        <div style={styles.grid}>
+          <div>
+            <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>DE:</p>
+            <input
+              style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
+              placeholder="SUA EMPRESA"
+              value={invoice.company.name}
+              onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
+            />
+            <input
+              style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+              placeholder="Endereço"
+              value={invoice.company.address}
+              onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
+            />
+            <input
+              style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+              placeholder="email@empresa.com | Telefone"
+              value={`${invoice.company.email}${invoice.company.phone ? ' | ' + invoice.company.phone : ''}`}
+              onChange={(e) => {
+                const parts = e.target.value.split(' | ');
+                setInvoice({ 
+                  ...invoice, 
+                  company: { 
+                    ...invoice.company, 
+                    email: parts[0] || '',
+                    phone: parts[1] || ''
+                  } 
+                });
+              }}
+            />
           </div>
-
-          <div className="col-span-5 flex flex-col items-end space-y-6">
-            <div className="w-full space-y-4 pt-10">
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Emissão:</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-gray-700 print:block hidden">{formatDate(invoice.date)}</span>
-                  <input
-                    type="date"
-                    className="no-print font-bold text-gray-700 text-right w-40 p-0 border-none bg-transparent"
-                    value={invoice.date}
-                    onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Vencimento:</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-gray-700 print:block hidden">{formatDate(invoice.dueDate)}</span>
-                  <input
-                    type="date"
-                    className="no-print font-bold text-gray-700 text-right w-40 p-0 border-none bg-transparent"
-                    value={invoice.dueDate}
-                    onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Status:</span>
-                <select
-                  className="input-ghost p-0 text-right appearance-none font-bold text-blue-600 w-32"
-                  value={invoice.status}
-                  onChange={(e) => setInvoice({ ...invoice, status: e.target.value as InvoiceStatus })}
-                >
-                  {Object.values(InvoiceStatus).map((s) => (
-                    <option key={s} value={s}>
-                      {s.toUpperCase()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Moeda:</span>
-                <input
-                  className="input-ghost p-0 text-right w-24 font-bold text-gray-700"
-                  value={invoice.currency}
-                  onChange={(e) => setInvoice({ ...invoice, currency: e.target.value })}
-                />
-              </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <span style={styles.labelSmall}>Emissão: </span>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.date)}</span>
+              <input
+                type="date"
+                style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                value={invoice.date}
+                onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
+                className="no-print"
+              />
             </div>
-          </div>
-        </div>
-
-        {/* Items Table */}
-        <div className="mb-12">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-[#1e293b] text-white print-table-header">
-                <th className="py-5 px-6 text-left text-[10px] font-black uppercase tracking-[0.2em] w-[65%]">Descrição</th>
-                <th className="py-5 px-2 text-center text-[10px] font-black uppercase tracking-[0.2em]">Qtd</th>
-                <th className="py-5 px-4 text-right text-[10px] font-black uppercase tracking-[0.2em]">Preço Unit.</th>
-                <th className="py-5 px-6 text-right text-[10px] font-black uppercase tracking-[0.2em]">Total</th>
-                <th className="no-print w-10"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 border-b-2 border-gray-900">
-              {invoice.items.map((item) => (
-                <tr key={item.id} className="group align-top">
-                  <td className="py-8 px-6">
-                    <AutoResizeTextarea
-                      className="input-ghost w-full font-medium text-gray-600 leading-relaxed placeholder-gray-200"
-                      placeholder="Descrição detalhada do serviço..."
-                      value={item.description}
-                      onChange={(val) => handleItemChange(item.id, 'description', val)}
-                      rows={3}
-                    />
-                  </td>
-                  <td className="py-8 px-2 text-center">
-                    <input
-                      type="number"
-                      className="input-ghost w-12 text-center font-bold text-gray-700"
-                      value={item.quantity}
-                      onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                    />
-                  </td>
-                  <td className="py-8 px-4 text-right">
-                    <div className="inline-flex items-center gap-1 text-gray-500 font-bold">
-                      <span className="text-[10px] uppercase">{invoice.currency}</span>
-                      <input
-                        type="number"
-                        className="input-ghost w-28 text-right font-black"
-                        value={item.rate}
-                        onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
-                      />
-                    </div>
-                  </td>
-                  <td className="py-8 px-6 text-right font-black text-gray-900 text-lg">
-                    {invoice.currency} {formatCurrency(item.total)}
-                  </td>
-                  <td className="py-8 no-print text-right">
-                    <button
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="text-red-300 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all p-2"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <button
-            onClick={handleAddItem}
-            className="no-print mt-6 flex items-center gap-2 text-blue-600 font-black text-xs uppercase tracking-[0.2em] hover:text-blue-800"
-          >
-            <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" />
-              </svg>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <span style={styles.labelSmall}>Vencimento: </span>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.dueDate)}</span>
+              <input
+                type="date"
+                style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                value={invoice.dueDate}
+                onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
+                className="no-print"
+              />
             </div>
-            Adicionar Item
-          </button>
-        </div>
-
-        {/* Totals */}
-        <div className="flex flex-col items-end pt-12 space-y-4">
-          <div className="w-full max-w-md space-y-4">
-            <div className="flex justify-between items-center text-sm font-bold text-gray-500 border-b border-gray-50 pb-4">
-              <span className="uppercase tracking-widest text-[10px]">Subtotal:</span>
-              <span className="font-black text-gray-800">
-                {invoice.currency} {formatCurrency(invoice.subtotal)}
+            <div>
+              <span style={styles.labelSmall}>Status: </span>
+              <span style={{ 
+                fontWeight: 700, 
+                fontSize: '0.75rem',
+                color: invoice.status === InvoiceStatus.PAID ? '#16a34a' : '#2563eb'
+              }}>
+                {invoice.status}
               </span>
             </div>
+          </div>
+        </div>
 
-            <div className="flex justify-between items-center pt-4">
-              <span className="text-xl font-black text-gray-900 tracking-tighter uppercase">TOTAL:</span>
-              <div className="text-right border-b-8 border-double border-gray-900 pb-2">
-                <span className="text-4xl font-black text-gray-900 tracking-tighter">
-                  {invoice.currency} {formatCurrency(invoice.total)}
-                </span>
+        {/* Client Section with Dropdown */}
+        <div style={{ ...styles.section, position: 'relative', marginBottom: '1.5rem' }}>
+          <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>FATURAR PARA:</p>
+          <div style={{ position: 'relative' }}>
+            <input
+              style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
+              placeholder="SELECIONE OU DIGITE O CLIENTE"
+              value={invoice.client.name}
+              onChange={(e) => {
+                setInvoice({ ...invoice, client: { ...invoice.client, name: e.target.value } });
+                setClientSearch(e.target.value);
+                setShowClientDropdown(true);
+              }}
+              onFocus={() => setShowClientDropdown(true)}
+              onBlur={() => setTimeout(() => setShowClientDropdown(false), 200)}
+            />
+            {showClientDropdown && filteredClients.length > 0 && (
+              <div style={styles.clientDropdown} className="no-print">
+                {filteredClients.map(client => (
+                  <div
+                    key={client.id}
+                    style={styles.clientOption}
+                    onClick={() => handleSelectClient(client)}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  >
+                    <div style={{ fontWeight: 600 }}>{client.name}</div>
+                    {client.email && <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{client.email}</div>}
+                  </div>
+                ))}
               </div>
+            )}
+          </div>
+          <input
+            style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+            placeholder="Endereço do cliente"
+            value={invoice.client.address}
+            onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, address: e.target.value } })}
+          />
+          <input
+            style={{ ...styles.inputGhost, color: '#9ca3af', fontSize: '0.75rem' }}
+            placeholder="email@cliente.com"
+            value={invoice.client.email}
+            onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, email: e.target.value } })}
+          />
+        </div>
+
+        {/* Items Table - Compact for PDF */}
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={{ ...styles.th, width: '55%' }}>Descrição</th>
+              <th style={{ ...styles.th, textAlign: 'center', width: '10%' }}>Qtd</th>
+              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Preço</th>
+              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Total</th>
+              <th style={{ ...styles.th, width: '5%' }} className="no-print"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoice.items.map((item) => (
+              <tr key={item.id}>
+                <td style={styles.td}>
+                  <input
+                    style={{ ...styles.inputGhost, width: '100%' }}
+                    placeholder="Descrição do serviço..."
+                    value={item.description}
+                    onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
+                  />
+                </td>
+                <td style={{ ...styles.td, textAlign: 'center' }}>
+                  <input
+                    type="number"
+                    style={{ ...styles.inputGhost, width: '50px', textAlign: 'center', fontWeight: 600 }}
+                    value={item.quantity}
+                    onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
+                  />
+                </td>
+                <td style={{ ...styles.td, textAlign: 'right' }}>
+                  <input
+                    type="number"
+                    style={{ ...styles.inputGhost, width: '80px', textAlign: 'right', fontWeight: 600 }}
+                    value={item.rate}
+                    onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
+                  />
+                </td>
+                <td style={{ ...styles.td, textAlign: 'right', fontWeight: 700 }}>
+                  {invoice.currency} {formatCurrency(item.total)}
+                </td>
+                <td style={styles.td} className="no-print">
+                  <button onClick={() => handleRemoveItem(item.id)} style={styles.removeBtn}>
+                    ✕
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <button onClick={handleAddItem} style={styles.addItemBtn} className="no-print">
+          <span style={{ 
+            width: '20px', 
+            height: '20px', 
+            borderRadius: '50%', 
+            backgroundColor: '#2563eb', 
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '0.875rem'
+          }}>+</span>
+          Adicionar Item
+        </button>
+
+        {/* Totals - Compact */}
+        <div style={styles.totalsContainer}>
+          <div style={styles.totalsBox}>
+            <div style={styles.totalRow}>
+              <span style={styles.totalLabel}>Subtotal:</span>
+              <span style={styles.totalValue}>{invoice.currency} {formatCurrency(invoice.subtotal)}</span>
+            </div>
+            {invoice.taxRate > 0 && (
+              <div style={styles.totalRow}>
+                <span style={styles.totalLabel}>Imposto ({invoice.taxRate}%):</span>
+                <span style={styles.totalValue}>{invoice.currency} {formatCurrency(invoice.taxTotal)}</span>
+              </div>
+            )}
+            {invoice.discount > 0 && (
+              <div style={styles.totalRow}>
+                <span style={styles.totalLabel}>Desconto:</span>
+                <span style={{ ...styles.totalValue, color: '#dc2626' }}>-{invoice.currency} {formatCurrency(invoice.discount)}</span>
+              </div>
+            )}
+            <div style={styles.totalFinal}>
+              <span style={{ ...styles.totalLabel, fontSize: '0.75rem' }}>TOTAL:</span>
+              <span style={styles.totalFinalValue}>{invoice.currency} {formatCurrency(invoice.total)}</span>
             </div>
           </div>
         </div>
 
-        {/* Footer Notes */}
+        {/* Notes - Compact */}
         {(invoice.notes || invoice.terms) && (
-          <div className="mt-32 pt-10 border-t border-gray-100 space-y-8">
+          <div style={styles.notesSection}>
             {invoice.notes && (
-              <div className="space-y-2">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Observações:</p>
-                <p className="text-sm text-gray-600 whitespace-pre-wrap leading-relaxed">{invoice.notes}</p>
+              <div style={{ marginBottom: '0.75rem' }}>
+                <p style={{ ...styles.labelSmall, marginBottom: '0.25rem' }}>Observações:</p>
+                <p style={{ fontSize: '0.75rem', color: '#4b5563', whiteSpace: 'pre-wrap' }}>{invoice.notes}</p>
               </div>
             )}
             {invoice.terms && (
-              <div className="space-y-2">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Termos e Condições:</p>
-                <p className="text-[11px] text-gray-400 italic whitespace-pre-wrap leading-tight">{invoice.terms}</p>
+              <div>
+                <p style={{ ...styles.labelSmall, marginBottom: '0.25rem' }}>Termos:</p>
+                <p style={{ fontSize: '0.625rem', color: '#9ca3af', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>{invoice.terms}</p>
               </div>
             )}
           </div>
@@ -630,73 +1031,70 @@ const InvoiceEditorPage: React.FC = () => {
       </div>
 
       {/* Settings Panel */}
-      <div className="no-print card p-10">
-        <h3 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-              />
-            </svg>
-          </div>
-          Configurações da Fatura
+      <div style={styles.settingsCard} className="no-print">
+        <h3 style={styles.settingsTitle}>
+          <span style={{ 
+            width: '32px', 
+            height: '32px', 
+            backgroundColor: '#eff6ff', 
+            color: '#2563eb',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>⚙</span>
+          Configurações
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Imposto (%)</label>
+        <div style={styles.settingsGrid}>
+          <div>
+            <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Imposto (%)</label>
             <input
               type="number"
-              className="font-bold"
+              style={styles.input}
               value={invoice.taxRate}
               onChange={(e) => setInvoice({ ...invoice, taxRate: parseFloat(e.target.value) || 0 })}
             />
           </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Desconto Fixo</label>
+          <div>
+            <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Desconto</label>
             <input
               type="number"
-              className="font-bold"
+              style={styles.input}
               value={invoice.discount}
               onChange={(e) => setInvoice({ ...invoice, discount: parseFloat(e.target.value) || 0 })}
             />
           </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Moeda Local</label>
+          <div>
+            <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Moeda</label>
             <input
               type="text"
-              className="font-bold uppercase"
+              style={{ ...styles.input, textTransform: 'uppercase' }}
               value={invoice.currency}
               onChange={(e) => setInvoice({ ...invoice, currency: e.target.value.toUpperCase() })}
             />
           </div>
         </div>
-        <div className="mt-10 space-y-6">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notas para o Cliente</label>
-            <textarea
-              className="h-24 font-medium"
-              placeholder="Ex: Chave PIX: seu@email.com"
-              value={invoice.notes}
-              onChange={(e) => setInvoice({ ...invoice, notes: e.target.value })}
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Termos Legais</label>
-            <textarea
-              className="h-24 text-gray-400 font-medium italic"
-              placeholder="Contrato, multas por atraso, etc..."
-              value={invoice.terms}
-              onChange={(e) => setInvoice({ ...invoice, terms: e.target.value })}
-            />
-          </div>
+        <div style={{ marginTop: '1.5rem' }}>
+          <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Notas</label>
+          <textarea
+            style={styles.textarea}
+            placeholder="Chave PIX, dados bancários, etc."
+            value={invoice.notes}
+            onChange={(e) => setInvoice({ ...invoice, notes: e.target.value })}
+          />
         </div>
-
-        <div className="mt-12 flex justify-end">
-          <button onClick={handleSave} disabled={saving} className="btn-primary text-lg px-12 py-4">
-            {saving ? 'SALVANDO...' : 'FINALIZAR E GUARDAR'}
+        <div style={{ marginTop: '1rem' }}>
+          <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Termos</label>
+          <textarea
+            style={{ ...styles.textarea, fontStyle: 'italic', color: '#6b7280' }}
+            placeholder="Condições de pagamento, multas, etc."
+            value={invoice.terms}
+            onChange={(e) => setInvoice({ ...invoice, terms: e.target.value })}
+          />
+        </div>
+        <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={handleSave} disabled={saving} style={{ ...styles.btnPrimary, padding: '0.75rem 2rem' }}>
+            {saving ? 'SALVANDO...' : 'FINALIZAR E SALVAR'}
           </button>
         </div>
       </div>
