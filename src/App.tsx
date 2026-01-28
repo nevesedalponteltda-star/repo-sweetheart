@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage';
 import InvoiceEditorPage from './pages/InvoiceEditorPage';
 import ClientsPage from './pages/ClientsPage';
 import SettingsPage from './pages/SettingsPage';
+import InstallPage from './pages/InstallPage';
 import Layout from './components/Layout';
 
 const App: React.FC = () => {
@@ -57,6 +58,7 @@ const App: React.FC = () => {
         <Route path="/invoice/:id" element={<InvoiceEditorPage />} />
         <Route path="/clients" element={<ClientsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/install" element={<InstallPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
