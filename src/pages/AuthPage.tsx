@@ -4,25 +4,19 @@ import proinvoiceLogo from '@/src/assets/proinvoice-logo.png';
 import featureDashboard from '@/src/assets/feature-dashboard.png';
 import featureInvoice from '@/src/assets/feature-invoice.png';
 import featureClients from '@/src/assets/feature-clients.png';
-
-const features = [
-  {
-    title: 'Dashboard Inteligente',
-    description: 'Acompanhe suas receitas, faturas pendentes e métricas em tempo real.',
-    image: featureDashboard,
-  },
-  {
-    title: 'Faturas Profissionais',
-    description: 'Crie faturas personalizadas com sua marca e exporte em PDF.',
-    image: featureInvoice,
-  },
-  {
-    title: 'Gestão de Clientes',
-    description: 'Organize todos os seus clientes em um só lugar.',
-    image: featureClients,
-  },
-];
-
+const features = [{
+  title: 'Dashboard Inteligente',
+  description: 'Acompanhe suas receitas, faturas pendentes e métricas em tempo real.',
+  image: featureDashboard
+}, {
+  title: 'Faturas Profissionais',
+  description: 'Crie faturas personalizadas com sua marca e exporte em PDF.',
+  image: featureInvoice
+}, {
+  title: 'Gestão de Clientes',
+  description: 'Organize todos os seus clientes em um só lugar.',
+  image: featureClients
+}];
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -31,34 +25,35 @@ const AuthPage: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentFeature, setCurrentFeature] = useState(0);
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
+      setCurrentFeature(prev => (prev + 1) % features.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setLoading(true);
-
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        const {
+          error
+        } = await supabase.auth.signInWithPassword({
           email,
-          password,
+          password
         });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({
+        const {
+          error
+        } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
+            emailRedirectTo: `${window.location.origin}/`
+          }
         });
         if (error) throw error;
         setSuccess('Conta criada com sucesso! Você já pode fazer login.');
@@ -79,9 +74,7 @@ const AuthPage: React.FC = () => {
       setLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen flex">
+  return <div className="min-h-screen flex">
       {/* Left Side - Feature Showcase */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 relative overflow-hidden">
         {/* Background Pattern */}
@@ -112,26 +105,12 @@ const AuthPage: React.FC = () => {
 
             {/* Feature Image */}
             <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-4 shadow-2xl">
-              <img
-                src={features[currentFeature].image}
-                alt={features[currentFeature].title}
-                className="w-full h-auto rounded-lg shadow-lg transition-all duration-500"
-              />
+              <img src={features[currentFeature].image} alt={features[currentFeature].title} className="w-full h-auto rounded-lg shadow-lg transition-all duration-500" />
             </div>
 
             {/* Carousel Dots */}
             <div className="flex space-x-3 mt-8">
-              {features.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentFeature(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentFeature
-                      ? 'bg-white w-8'
-                      : 'bg-white/40 hover:bg-white/60'
-                  }`}
-                />
-              ))}
+              {features.map((_, index) => <button key={index} onClick={() => setCurrentFeature(index)} className={`w-3 h-3 rounded-full transition-all ${index === currentFeature ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/60'}`} />)}
             </div>
           </div>
 
@@ -158,7 +137,7 @@ const AuthPage: React.FC = () => {
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
-            <img src={proinvoiceLogo} alt="ProInvoice" className="h-16 mx-auto mb-4" />
+            
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
               Pro<span className="text-blue-600">Invoice</span>
             </h1>
@@ -171,9 +150,7 @@ const AuthPage: React.FC = () => {
               {isLogin ? 'Bem-vindo de volta!' : 'Crie sua conta'}
             </h1>
             <p className="text-gray-500">
-              {isLogin
-                ? 'Entre para acessar seu painel de faturamento.'
-                : 'Comece a gerenciar suas faturas de forma profissional.'}
+              {isLogin ? 'Entre para acessar seu painel de faturamento.' : 'Comece a gerenciar suas faturas de forma profissional.'}
             </p>
           </div>
 
@@ -183,23 +160,19 @@ const AuthPage: React.FC = () => {
               {isLogin ? 'Entrar na sua conta' : 'Criar nova conta'}
             </h2>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm flex items-center">
+            {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm flex items-center">
                 <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
                 {error}
-              </div>
-            )}
+              </div>}
 
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm flex items-center">
+            {success && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm flex items-center">
                 <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 {success}
-              </div>
-            )}
+              </div>}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
@@ -212,14 +185,7 @@ const AuthPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                     </svg>
                   </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu@email.com"
-                    required
-                    className="w-full pl-10"
-                  />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="seu@email.com" required className="w-full pl-10" />
                 </div>
               </div>
 
@@ -233,58 +199,35 @@ const AuthPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                   </div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    minLength={6}
-                    className="w-full pl-10"
-                  />
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="w-full pl-10" />
                 </div>
               </div>
 
-              {isLogin && (
-                <div className="flex justify-end">
+              {isLogin && <div className="flex justify-end">
                   <button type="button" className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     Esqueceu a senha?
                   </button>
-                </div>
-              )}
+                </div>}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full btn-primary py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center">
+              <button type="submit" disabled={loading} className="w-full btn-primary py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed">
+                {loading ? <span className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     Aguarde...
-                  </span>
-                ) : isLogin ? (
-                  'Entrar'
-                ) : (
-                  'Criar Conta'
-                )}
+                  </span> : isLogin ? 'Entrar' : 'Criar Conta'}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
                 {isLogin ? 'Não tem conta?' : 'Já tem conta?'}{' '}
-                <button
-                  onClick={() => {
-                    setIsLogin(!isLogin);
-                    setError('');
-                    setSuccess('');
-                  }}
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
-                >
+                <button onClick={() => {
+                setIsLogin(!isLogin);
+                setError('');
+                setSuccess('');
+              }} className="text-blue-600 hover:text-blue-800 font-semibold">
                   {isLogin ? 'Criar agora' : 'Fazer login'}
                 </button>
               </p>
@@ -308,8 +251,6 @@ const AuthPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AuthPage;
