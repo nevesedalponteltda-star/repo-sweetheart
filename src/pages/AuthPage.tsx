@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/src/integrations/supabase/client';
-import proinvoiceLogo from '@/assets/proinvoice-logo.png';
-import featureDashboard from '@/assets/feature-dashboard.png';
-import featureInvoice from '@/assets/feature-invoice.png';
-import featureClients from '@/assets/feature-clients.png';
+import proinvoiceLogo from '@/src/assets/proinvoice-logo.png';
+import featureDashboard from '@/src/assets/feature-dashboard.png';
+import featureInvoice from '@/src/assets/feature-invoice.png';
+import featureClients from '@/src/assets/feature-clients.png';
 
 const features = [
   {
