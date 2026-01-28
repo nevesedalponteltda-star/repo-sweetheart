@@ -2,16 +2,18 @@ import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { componentTagger } from 'lovable-tagger';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     server: {
+      host: '::',
       port: 8080,
-      host: '0.0.0.0',
     },
     plugins: [
       react(),
+      mode === 'development' && componentTagger(),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
@@ -61,7 +63,7 @@ export default defineConfig(({ mode }) => {
           ]
         }
       })
-    ],
+    ].filter(Boolean),
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
