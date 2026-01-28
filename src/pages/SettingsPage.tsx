@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/src/integrations/supabase/client';
+import { useCurrencyExchange } from '@/src/hooks/useCurrencyExchange';
 
 interface ProfileData {
   company_name: string;
@@ -8,6 +9,7 @@ interface ProfileData {
   company_address: string;
   company_website: string;
   company_tax_id: string;
+  company_logo_url: string;
   default_currency: string;
   default_tax_rate: number;
   default_notes: string;
@@ -18,6 +20,8 @@ const SettingsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
+  const { rates, loading: ratesLoading, lastUpdated, getAvailableCurrencies } = useCurrencyExchange();
+  
   const [profile, setProfile] = useState<ProfileData>({
     company_name: '',
     company_email: '',
@@ -25,6 +29,7 @@ const SettingsPage: React.FC = () => {
     company_address: '',
     company_website: '',
     company_tax_id: '',
+    company_logo_url: '',
     default_currency: 'USD',
     default_tax_rate: 0,
     default_notes: '',
@@ -56,6 +61,7 @@ const SettingsPage: React.FC = () => {
           company_address: data.company_address || '',
           company_website: data.company_website || '',
           company_tax_id: data.company_tax_id || '',
+          company_logo_url: data.company_logo_url || '',
           default_currency: data.default_currency || 'USD',
           default_tax_rate: Number(data.default_tax_rate) || 0,
           default_notes: data.default_notes || '',
@@ -66,6 +72,21 @@ const SettingsPage: React.FC = () => {
       console.error('Error loading profile:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile({ ...profile, company_logo_url: reader.result as string });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -87,6 +108,7 @@ const SettingsPage: React.FC = () => {
           company_address: profile.company_address || null,
           company_website: profile.company_website || null,
           company_tax_id: profile.company_tax_id || null,
+          company_logo_url: profile.company_logo_url || null,
           default_currency: profile.default_currency,
           default_tax_rate: profile.default_tax_rate,
           default_notes: profile.default_notes || null,
@@ -102,6 +124,8 @@ const SettingsPage: React.FC = () => {
       setSaving(false);
     }
   };
+
+  const currencies = getAvailableCurrencies();
 
   if (loading) {
     return (
@@ -125,6 +149,57 @@ const SettingsPage: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Logo Section */}
+        <div className="card p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Logo da Empresa</h2>
+          <div className="flex items-start gap-6">
+            <div className="relative group">
+              <div className="w-32 h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden hover:border-blue-400 transition-colors cursor-pointer">
+                {profile.company_logo_url ? (
+                  <img 
+                    src={profile.company_logo_url} 
+                    alt="Logo" 
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <svg className="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-xs text-gray-400 mt-1 block">Clique para enviar</span>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </div>
+            </div>
+            <div className="flex-1 space-y-2">
+              <p className="text-sm text-gray-600">
+                Faça upload do logo da sua empresa para aparecer nas faturas.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Formatos aceitos: PNG, JPG, SVG</li>
+                <li>• Tamanho máximo: 2MB</li>
+                <li>• Recomendado: 200x200 pixels</li>
+              </ul>
+              {profile.company_logo_url && (
+                <button
+                  type="button"
+                  onClick={() => setProfile({ ...profile, company_logo_url: '' })}
+                  className="text-red-600 hover:text-red-800 text-sm font-medium"
+                >
+                  Remover logo
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Company Info */}
         <div className="card p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Dados da Empresa</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -185,6 +260,7 @@ const SettingsPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Invoice Defaults */}
         <div className="card p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Padrões para Faturas</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,9 +270,9 @@ const SettingsPage: React.FC = () => {
                 value={profile.default_currency}
                 onChange={(e) => setProfile({ ...profile, default_currency: e.target.value })}
               >
-                <option value="USD">USD - Dólar</option>
-                <option value="BRL">BRL - Real</option>
-                <option value="EUR">EUR - Euro</option>
+                {currencies.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -221,7 +297,7 @@ const SettingsPage: React.FC = () => {
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2">Termos Padrão</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Termos Legais Padrão</label>
               <textarea
                 value={profile.default_terms}
                 onChange={(e) => setProfile({ ...profile, default_terms: e.target.value })}
@@ -230,6 +306,39 @@ const SettingsPage: React.FC = () => {
               />
             </div>
           </div>
+        </div>
+
+        {/* Exchange Rates Info */}
+        <div className="card p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            Cotações de Moedas
+          </h2>
+          {ratesLoading ? (
+            <p className="text-sm text-gray-500">Carregando cotações...</p>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">
+                As cotações são atualizadas automaticamente e usadas para converter valores nas faturas.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                {currencies.map(currency => (
+                  <div key={currency} className="bg-gray-50 rounded-lg p-3 text-center">
+                    <div className="text-xs text-gray-400 font-bold">1 USD =</div>
+                    <div className="text-lg font-black text-gray-900">{rates[currency]?.toFixed(2)}</div>
+                    <div className="text-sm font-bold text-blue-600">{currency}</div>
+                  </div>
+                ))}
+              </div>
+              {lastUpdated && (
+                <p className="text-xs text-gray-400">
+                  Última atualização: {new Date(lastUpdated).toLocaleString('pt-BR')}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end">
