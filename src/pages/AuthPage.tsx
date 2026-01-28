@@ -81,46 +81,46 @@ const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex overflow-hidden bg-slate-50">
       {/* Left Side - Feature Showcase */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 lg:max-w-[50vw] bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 relative overflow-hidden flex-shrink-0">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
           <div className="absolute bottom-0 right-0 w-80 h-80 bg-white rounded-full translate-x-1/3 translate-y-1/3" />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+        <div className="relative z-10 flex flex-col justify-between p-8 xl:p-12 w-full h-full overflow-hidden">
           {/* Header */}
-          <div className="flex items-center space-x-3">
-            <img src={proinvoiceLogo} alt="ProInvoice" className="h-12 w-auto" />
-            <span className="text-2xl font-black text-white tracking-tight">
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <img src={proinvoiceLogo} alt="ProInvoice" className="h-10 xl:h-12 w-auto" />
+            <span className="text-xl xl:text-2xl font-black text-white tracking-tight">
               Pro<span className="text-blue-200">Invoice</span>
             </span>
           </div>
 
           {/* Feature Carousel */}
-          <div className="flex-1 flex flex-col justify-center">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">
+          <div className="flex-1 flex flex-col justify-center min-h-0 py-6 overflow-hidden">
+            <div className="mb-4 xl:mb-8 flex-shrink-0">
+              <h2 className="text-2xl xl:text-3xl font-bold text-white mb-2 xl:mb-4">
                 {features[currentFeature].title}
               </h2>
-              <p className="text-blue-100 text-lg max-w-md">
+              <p className="text-blue-100 text-base xl:text-lg max-w-md">
                 {features[currentFeature].description}
               </p>
             </div>
 
             {/* Feature Image */}
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-4 shadow-2xl">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-3 xl:p-4 shadow-2xl overflow-hidden flex-shrink min-h-0">
               <img
                 src={features[currentFeature].image}
                 alt={features[currentFeature].title}
-                className="w-full h-auto rounded-lg shadow-lg transition-all duration-500"
+                className="w-full h-auto max-h-[40vh] object-contain rounded-lg shadow-lg transition-all duration-500"
               />
             </div>
 
             {/* Carousel Dots */}
-            <div className="flex space-x-3 mt-8">
+            <div className="flex space-x-3 mt-4 xl:mt-8 flex-shrink-0">
               {features.map((_, index) => (
                 <button
                   key={index}
@@ -136,18 +136,18 @@ const AuthPage: React.FC = () => {
           </div>
 
           {/* Footer Stats */}
-          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/20">
+          <div className="grid grid-cols-3 gap-4 xl:gap-6 pt-6 xl:pt-8 border-t border-white/20 flex-shrink-0">
             <div>
-              <p className="text-3xl font-bold text-white">10k+</p>
-              <p className="text-blue-200 text-sm">Faturas Geradas</p>
+              <p className="text-2xl xl:text-3xl font-bold text-white">10k+</p>
+              <p className="text-blue-200 text-xs xl:text-sm">Faturas Geradas</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-white">500+</p>
-              <p className="text-blue-200 text-sm">Empresas Ativas</p>
+              <p className="text-2xl xl:text-3xl font-bold text-white">500+</p>
+              <p className="text-blue-200 text-xs xl:text-sm">Empresas Ativas</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-white">99.9%</p>
-              <p className="text-blue-200 text-sm">Uptime</p>
+              <p className="text-2xl xl:text-3xl font-bold text-white">99.9%</p>
+              <p className="text-blue-200 text-xs xl:text-sm">Uptime</p>
             </div>
           </div>
         </div>
