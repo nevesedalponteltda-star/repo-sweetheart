@@ -16,6 +16,223 @@ interface ProfileData {
   default_terms: string;
 }
 
+const styles = {
+  container: {
+    maxWidth: '768px',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.5rem'
+  },
+  title: {
+    fontSize: '1.875rem',
+    fontWeight: 800,
+    color: '#111827',
+    letterSpacing: '-0.025em',
+    margin: 0
+  },
+  subtitle: {
+    color: '#6b7280',
+    margin: '0.25rem 0 0 0',
+    fontSize: '0.875rem'
+  },
+  successBox: {
+    backgroundColor: '#f0fdf4',
+    border: '1px solid #bbf7d0',
+    color: '#15803d',
+    padding: '0.75rem 1rem',
+    borderRadius: '8px',
+    fontSize: '0.875rem'
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '1rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    padding: '1.5rem'
+  },
+  cardTitle: {
+    fontSize: '1.25rem',
+    fontWeight: 700,
+    color: '#111827',
+    marginBottom: '1rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem'
+  },
+  logoSection: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '1.5rem'
+  },
+  logoBox: {
+    width: '128px',
+    height: '128px',
+    backgroundColor: '#f3f4f6',
+    border: '2px dashed #d1d5db',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    position: 'relative' as const
+  },
+  logoImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain' as const
+  },
+  logoPlaceholder: {
+    textAlign: 'center' as const
+  },
+  logoPlaceholderText: {
+    fontSize: '0.75rem',
+    color: '#9ca3af',
+    marginTop: '0.25rem'
+  },
+  logoInfo: {
+    flex: 1
+  },
+  logoInfoText: {
+    fontSize: '0.875rem',
+    color: '#4b5563',
+    marginBottom: '0.5rem'
+  },
+  logoInfoList: {
+    fontSize: '0.75rem',
+    color: '#9ca3af',
+    listStyle: 'none',
+    padding: 0,
+    margin: 0
+  },
+  removeLogoBtn: {
+    color: '#dc2626',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    marginTop: '0.5rem'
+  },
+  formGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '1rem'
+  },
+  formFullWidth: {
+    gridColumn: '1 / -1'
+  },
+  label: {
+    display: 'block',
+    fontSize: '0.875rem',
+    fontWeight: 700,
+    color: '#374151',
+    marginBottom: '0.5rem'
+  },
+  input: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  },
+  select: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  },
+  textarea: {
+    width: '100%',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    resize: 'vertical' as const,
+    boxSizing: 'border-box' as const
+  },
+  ratesGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+    gap: '0.75rem',
+    marginTop: '1rem'
+  },
+  rateBox: {
+    backgroundColor: '#f9fafb',
+    borderRadius: '8px',
+    padding: '0.75rem',
+    textAlign: 'center' as const
+  },
+  rateLabel: {
+    fontSize: '0.625rem',
+    color: '#9ca3af',
+    fontWeight: 700
+  },
+  rateValue: {
+    fontSize: '1.125rem',
+    fontWeight: 900,
+    color: '#111827'
+  },
+  rateCurrency: {
+    fontSize: '0.875rem',
+    fontWeight: 700,
+    color: '#2563eb'
+  },
+  rateUpdated: {
+    fontSize: '0.75rem',
+    color: '#9ca3af',
+    marginTop: '1rem'
+  },
+  btnPrimary: {
+    backgroundColor: '#2563eb',
+    color: '#ffffff',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)'
+  },
+  formActions: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '5rem 0'
+  },
+  spinner: {
+    width: '32px',
+    height: '32px',
+    border: '4px solid #e5e7eb',
+    borderTopColor: '#2563eb',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite'
+  },
+  hiddenInput: {
+    position: 'absolute' as const,
+    inset: 0,
+    opacity: 0,
+    cursor: 'pointer'
+  }
+};
+
 const SettingsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -129,59 +346,52 @@ const SettingsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <div style={styles.loadingContainer}>
+        <div style={styles.spinner}></div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div style={styles.container}>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      
       <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Configurações</h1>
-        <p className="text-gray-500">Gerencie as informações da sua empresa e preferências de faturamento</p>
+        <h1 style={styles.title}>Configurações</h1>
+        <p style={styles.subtitle}>Gerencie as informações da sua empresa e preferências de faturamento</p>
       </div>
 
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-          {success}
-        </div>
-      )}
+      {success && <div style={styles.successBox}>{success}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Logo Section */}
-        <div className="card p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Logo da Empresa</h2>
-          <div className="flex items-start gap-6">
-            <div className="relative group">
-              <div className="w-32 h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden hover:border-blue-400 transition-colors cursor-pointer">
-                {profile.company_logo_url ? (
-                  <img 
-                    src={profile.company_logo_url} 
-                    alt="Logo" 
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <div className="text-center">
-                    <svg className="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-xs text-gray-400 mt-1 block">Clique para enviar</span>
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoUpload}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                />
-              </div>
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>Logo da Empresa</h2>
+          <div style={styles.logoSection}>
+            <div style={styles.logoBox}>
+              {profile.company_logo_url ? (
+                <img src={profile.company_logo_url} alt="Logo" style={styles.logoImg} />
+              ) : (
+                <div style={styles.logoPlaceholder}>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span style={styles.logoPlaceholderText}>Clique para enviar</span>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoUpload}
+                style={styles.hiddenInput}
+              />
             </div>
-            <div className="flex-1 space-y-2">
-              <p className="text-sm text-gray-600">
+            <div style={styles.logoInfo}>
+              <p style={styles.logoInfoText}>
                 Faça upload do logo da sua empresa para aparecer nas faturas.
               </p>
-              <ul className="text-xs text-gray-400 space-y-1">
+              <ul style={styles.logoInfoList}>
                 <li>• Formatos aceitos: PNG, JPG, SVG</li>
                 <li>• Tamanho máximo: 2MB</li>
                 <li>• Recomendado: 200x200 pixels</li>
@@ -190,7 +400,7 @@ const SettingsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setProfile({ ...profile, company_logo_url: '' })}
-                  className="text-red-600 hover:text-red-800 text-sm font-medium"
+                  style={styles.removeLogoBtn}
                 >
                   Remover logo
                 </button>
@@ -200,75 +410,82 @@ const SettingsPage: React.FC = () => {
         </div>
 
         {/* Company Info */}
-        <div className="card p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Dados da Empresa</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>Dados da Empresa</h2>
+          <div style={styles.formGrid}>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Nome da Empresa</label>
+              <label style={styles.label}>Nome da Empresa</label>
               <input
                 type="text"
                 value={profile.company_name}
                 onChange={(e) => setProfile({ ...profile, company_name: e.target.value })}
                 placeholder="Sua Empresa Ltda"
+                style={styles.input}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Email Comercial</label>
+              <label style={styles.label}>Email Comercial</label>
               <input
                 type="email"
                 value={profile.company_email}
                 onChange={(e) => setProfile({ ...profile, company_email: e.target.value })}
                 placeholder="contato@empresa.com"
+                style={styles.input}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Telefone</label>
+              <label style={styles.label}>Telefone</label>
               <input
                 type="text"
                 value={profile.company_phone}
                 onChange={(e) => setProfile({ ...profile, company_phone: e.target.value })}
                 placeholder="(00) 0000-0000"
+                style={styles.input}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Website</label>
+              <label style={styles.label}>Website</label>
               <input
                 type="text"
                 value={profile.company_website}
                 onChange={(e) => setProfile({ ...profile, company_website: e.target.value })}
                 placeholder="www.empresa.com.br"
+                style={styles.input}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">CNPJ / CPF</label>
+              <label style={styles.label}>CNPJ / CPF</label>
               <input
                 type="text"
                 value={profile.company_tax_id}
                 onChange={(e) => setProfile({ ...profile, company_tax_id: e.target.value })}
                 placeholder="00.000.000/0000-00"
+                style={styles.input}
               />
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2">Endereço Completo</label>
+            <div style={styles.formFullWidth}>
+              <label style={styles.label}>Endereço Completo</label>
               <textarea
                 value={profile.company_address}
                 onChange={(e) => setProfile({ ...profile, company_address: e.target.value })}
                 placeholder="Rua, Número, Bairro, Cidade - UF, CEP"
                 rows={2}
+                style={styles.textarea}
               />
             </div>
           </div>
         </div>
 
         {/* Invoice Defaults */}
-        <div className="card p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Padrões para Faturas</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>Padrões para Faturas</h2>
+          <div style={styles.formGrid}>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Moeda Padrão</label>
+              <label style={styles.label}>Moeda Padrão</label>
               <select
                 value={profile.default_currency}
                 onChange={(e) => setProfile({ ...profile, default_currency: e.target.value })}
+                style={styles.select}
               >
                 {currencies.map(c => (
                   <option key={c} value={c}>{c}</option>
@@ -276,7 +493,7 @@ const SettingsPage: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Taxa de Imposto (%)</label>
+              <label style={styles.label}>Taxa de Imposto (%)</label>
               <input
                 type="number"
                 value={profile.default_tax_rate}
@@ -285,55 +502,58 @@ const SettingsPage: React.FC = () => {
                 min="0"
                 max="100"
                 step="0.01"
+                style={styles.input}
               />
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2">Notas Padrão</label>
+            <div style={styles.formFullWidth}>
+              <label style={styles.label}>Notas Padrão</label>
               <textarea
                 value={profile.default_notes}
                 onChange={(e) => setProfile({ ...profile, default_notes: e.target.value })}
                 placeholder="Ex: Chave PIX: seu@email.com"
                 rows={3}
+                style={styles.textarea}
               />
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2">Termos Legais Padrão</label>
+            <div style={styles.formFullWidth}>
+              <label style={styles.label}>Termos Legais Padrão</label>
               <textarea
                 value={profile.default_terms}
                 onChange={(e) => setProfile({ ...profile, default_terms: e.target.value })}
                 placeholder="Condições de pagamento, multas, etc."
                 rows={3}
+                style={styles.textarea}
               />
             </div>
           </div>
         </div>
 
         {/* Exchange Rates Info */}
-        <div className="card p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2">
+              <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
             Cotações de Moedas
           </h2>
           {ratesLoading ? (
-            <p className="text-sm text-gray-500">Carregando cotações...</p>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Carregando cotações...</p>
           ) : (
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+            <div>
+              <p style={{ fontSize: '0.875rem', color: '#4b5563' }}>
                 As cotações são atualizadas automaticamente e usadas para converter valores nas faturas.
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              <div style={styles.ratesGrid}>
                 {currencies.map(currency => (
-                  <div key={currency} className="bg-gray-50 rounded-lg p-3 text-center">
-                    <div className="text-xs text-gray-400 font-bold">1 USD =</div>
-                    <div className="text-lg font-black text-gray-900">{rates[currency]?.toFixed(2)}</div>
-                    <div className="text-sm font-bold text-blue-600">{currency}</div>
+                  <div key={currency} style={styles.rateBox}>
+                    <div style={styles.rateLabel}>1 USD =</div>
+                    <div style={styles.rateValue}>{rates[currency]?.toFixed(2)}</div>
+                    <div style={styles.rateCurrency}>{currency}</div>
                   </div>
                 ))}
               </div>
               {lastUpdated && (
-                <p className="text-xs text-gray-400">
+                <p style={styles.rateUpdated}>
                   Última atualização: {new Date(lastUpdated).toLocaleString('pt-BR')}
                 </p>
               )}
@@ -341,8 +561,8 @@ const SettingsPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex justify-end">
-          <button type="submit" disabled={saving} className="btn-primary">
+        <div style={styles.formActions}>
+          <button type="submit" disabled={saving} style={styles.btnPrimary}>
             {saving ? 'Salvando...' : 'Salvar Configurações'}
           </button>
         </div>

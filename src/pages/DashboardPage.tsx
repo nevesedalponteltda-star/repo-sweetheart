@@ -14,6 +14,178 @@ interface InvoiceRow {
   client_email: string | null;
 }
 
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.5rem'
+  },
+  header: {
+    display: 'flex',
+    flexWrap: 'wrap' as const,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: '1rem'
+  },
+  title: {
+    fontSize: '1.875rem',
+    fontWeight: 800,
+    color: '#111827',
+    letterSpacing: '-0.025em',
+    margin: 0
+  },
+  subtitle: {
+    color: '#6b7280',
+    margin: '0.25rem 0 0 0',
+    fontSize: '0.875rem'
+  },
+  btnPrimary: {
+    backgroundColor: '#2563eb',
+    color: '#ffffff',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '9999px',
+    fontWeight: 700,
+    textDecoration: 'none',
+    display: 'inline-block',
+    boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.875rem'
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '1rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    overflow: 'hidden'
+  },
+  emptyState: {
+    padding: '4rem',
+    textAlign: 'center' as const
+  },
+  emptyIcon: {
+    width: '80px',
+    height: '80px',
+    backgroundColor: '#eff6ff',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 1.5rem'
+  },
+  emptyTitle: {
+    fontSize: '1.25rem',
+    fontWeight: 700,
+    color: '#111827',
+    margin: 0
+  },
+  emptyText: {
+    color: '#6b7280',
+    marginTop: '0.5rem',
+    maxWidth: '320px',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  emptyLink: {
+    marginTop: '2rem',
+    display: 'inline-block',
+    color: '#2563eb',
+    fontWeight: 700,
+    textDecoration: 'none'
+  },
+  table: {
+    width: '100%',
+    textAlign: 'left' as const,
+    borderCollapse: 'collapse' as const
+  },
+  th: {
+    backgroundColor: '#f9fafb',
+    color: '#9ca3af',
+    fontSize: '0.625rem',
+    fontWeight: 700,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em',
+    padding: '1.25rem 1.5rem',
+    borderBottom: '1px solid #e5e7eb'
+  },
+  td: {
+    padding: '1rem 1.5rem',
+    borderBottom: '1px solid #f3f4f6'
+  },
+  invoiceNumber: {
+    fontWeight: 700,
+    color: '#111827'
+  },
+  clientName: {
+    fontWeight: 500,
+    color: '#374151'
+  },
+  clientEmail: {
+    fontSize: '0.75rem',
+    color: '#9ca3af'
+  },
+  dateText: {
+    color: '#6b7280',
+    fontSize: '0.875rem'
+  },
+  amount: {
+    fontWeight: 700,
+    color: '#111827'
+  },
+  statusBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.25rem 0.75rem',
+    borderRadius: '9999px',
+    fontSize: '0.75rem',
+    fontWeight: 700
+  },
+  statusPaid: {
+    backgroundColor: '#dcfce7',
+    color: '#166534'
+  },
+  statusSent: {
+    backgroundColor: '#dbeafe',
+    color: '#1e40af'
+  },
+  statusOverdue: {
+    backgroundColor: '#fee2e2',
+    color: '#991b1b'
+  },
+  statusDefault: {
+    backgroundColor: '#f3f4f6',
+    color: '#374151'
+  },
+  actionBtn: {
+    background: 'none',
+    border: 'none',
+    fontWeight: 700,
+    fontSize: '0.875rem',
+    cursor: 'pointer',
+    marginLeft: '1rem'
+  },
+  editBtn: {
+    color: '#2563eb'
+  },
+  deleteBtn: {
+    color: '#dc2626'
+  },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '5rem 0'
+  },
+  spinner: {
+    width: '32px',
+    height: '32px',
+    border: '4px solid #e5e7eb',
+    borderTopColor: '#2563eb',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite'
+  }
+};
+
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
@@ -52,122 +224,113 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
       case InvoiceStatus.PAID:
-        return 'bg-green-100 text-green-800';
+        return styles.statusPaid;
       case InvoiceStatus.SENT:
-        return 'bg-blue-100 text-blue-800';
+        return styles.statusSent;
       case InvoiceStatus.OVERDUE:
-        return 'bg-red-100 text-red-800';
+        return styles.statusOverdue;
       default:
-        return 'bg-gray-100 text-gray-800';
+        return styles.statusDefault;
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <div style={styles.loadingContainer}>
+        <div style={styles.spinner}></div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div style={styles.container}>
+      <div style={styles.header}>
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Suas Faturas</h1>
-          <p className="text-gray-500">Acompanhe seus pagamentos e envie cobranças profissionais</p>
+          <h1 style={styles.title}>Suas Faturas</h1>
+          <p style={styles.subtitle}>Acompanhe seus pagamentos e envie cobranças profissionais</p>
         </div>
-        <Link to="/invoice/new" className="btn-primary">
+        <Link to="/invoice/new" style={styles.btnPrimary}>
           Criar Nova Fatura
         </Link>
       </div>
 
       {invoices.length === 0 ? (
-        <div className="card p-16 text-center">
-          <div className="mx-auto w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6">
-            <svg
-              className="w-10 h-10 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
+        <div style={styles.card}>
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIcon}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2">
+                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 style={styles.emptyTitle}>Comece seu faturamento</h3>
+            <p style={styles.emptyText}>
+              Crie faturas personalizadas com sua logo e receba pagamentos com profissionalismo.
+            </p>
+            <Link to="/invoice/new" style={styles.emptyLink}>
+              + Adicionar Minha Primeira Fatura
+            </Link>
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Comece seu faturamento</h3>
-          <p className="text-gray-500 mt-2 max-w-sm mx-auto">
-            Crie faturas personalizadas com sua logo e receba pagamentos com profissionalismo.
-          </p>
-          <Link to="/invoice/new" className="mt-8 inline-block text-blue-600 font-bold hover:text-blue-800">
-            + Adicionar Minha Primeira Fatura
-          </Link>
         </div>
       ) : (
-        <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-gray-50 text-gray-400 text-xs uppercase tracking-widest border-b border-gray-100">
+        <div style={styles.card}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={styles.table}>
+              <thead>
                 <tr>
-                  <th className="px-6 py-5 font-bold">Número</th>
-                  <th className="px-6 py-5 font-bold">Cliente</th>
-                  <th className="px-6 py-5 font-bold text-center">Data</th>
-                  <th className="px-6 py-5 font-bold text-right">Valor</th>
-                  <th className="px-6 py-5 font-bold text-center">Status</th>
-                  <th className="px-6 py-5 font-bold text-right">Ações</th>
+                  <th style={styles.th}>Número</th>
+                  <th style={styles.th}>Cliente</th>
+                  <th style={{ ...styles.th, textAlign: 'center' }}>Data</th>
+                  <th style={{ ...styles.th, textAlign: 'right' }}>Valor</th>
+                  <th style={{ ...styles.th, textAlign: 'center' }}>Status</th>
+                  <th style={{ ...styles.th, textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody>
                 {invoices.map((invoice) => (
                   <tr
                     key={invoice.id}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer group"
+                    style={{ cursor: 'pointer' }}
                     onClick={() => navigate(`/invoice/${invoice.id}`)}
                   >
-                    <td className="px-6 py-4">
-                      <span className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                        #{invoice.invoice_number}
+                    <td style={styles.td}>
+                      <span style={styles.invoiceNumber}>#{invoice.invoice_number}</span>
+                    </td>
+                    <td style={styles.td}>
+                      <div style={styles.clientName}>{invoice.client_name || 'Sem nome'}</div>
+                      <div style={styles.clientEmail}>{invoice.client_email}</div>
+                    </td>
+                    <td style={{ ...styles.td, textAlign: 'center' }}>
+                      <span style={styles.dateText}>
+                        {new Date(invoice.date).toLocaleDateString('pt-BR')}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-gray-800">{invoice.client_name || 'Sem nome'}</div>
-                      <div className="text-xs text-gray-400">{invoice.client_email}</div>
+                    <td style={{ ...styles.td, textAlign: 'right' }}>
+                      <span style={styles.amount}>
+                        {new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: invoice.currency || 'USD',
+                        }).format(invoice.total)}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-sm text-center">
-                      {new Date(invoice.date).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td className="px-6 py-4 font-bold text-gray-900 text-right">
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: invoice.currency || 'USD',
-                      }).format(invoice.total)}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(
-                          invoice.status
-                        )}`}
-                      >
+                    <td style={{ ...styles.td, textAlign: 'center' }}>
+                      <span style={{ ...styles.statusBadge, ...getStatusStyle(invoice.status) }}>
                         {invoice.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right space-x-4" onClick={(e) => e.stopPropagation()}>
+                    <td style={{ ...styles.td, textAlign: 'right' }} onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => navigate(`/invoice/${invoice.id}`)}
-                        className="text-blue-600 hover:text-blue-800 font-bold text-sm"
+                        style={{ ...styles.actionBtn, ...styles.editBtn }}
                       >
                         Editar
                       </button>
                       <button
                         onClick={(e) => handleDelete(invoice.id, e)}
-                        className="text-red-600 hover:text-red-800 font-bold text-sm"
+                        style={{ ...styles.actionBtn, ...styles.deleteBtn }}
                       >
                         Excluir
                       </button>
