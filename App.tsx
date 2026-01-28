@@ -1,4 +1,5 @@
 
+// Initializing ProInvoice System for Lovable Sync
 import React, { useState, useEffect } from 'react';
 import { Invoice, InvoiceStatus, InvoiceItem } from './types';
 import Dashboard from './components/Dashboard';
