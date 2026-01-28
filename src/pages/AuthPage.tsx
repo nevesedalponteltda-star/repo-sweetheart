@@ -50,62 +50,202 @@ const AuthPage: React.FC = () => {
     }
   };
 
+  // Inline styles to ensure they work even if Tailwind fails to load
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e3a8a 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '1rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    } as React.CSSProperties,
+    wrapper: {
+      width: '100%',
+      maxWidth: '400px'
+    } as React.CSSProperties,
+    logoContainer: {
+      textAlign: 'center' as const,
+      marginBottom: '2rem'
+    },
+    logoIcon: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '64px',
+      height: '64px',
+      backgroundColor: '#ffffff',
+      borderRadius: '16px',
+      boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+      marginBottom: '1rem'
+    } as React.CSSProperties,
+    logoText: {
+      fontSize: '2rem',
+      fontWeight: 900,
+      color: '#2563eb'
+    } as React.CSSProperties,
+    title: {
+      fontSize: '1.875rem',
+      fontWeight: 900,
+      color: '#ffffff',
+      letterSpacing: '-0.025em'
+    } as React.CSSProperties,
+    subtitle: {
+      color: '#93c5fd',
+      marginTop: '0.5rem',
+      fontSize: '0.875rem'
+    } as React.CSSProperties,
+    card: {
+      backgroundColor: '#ffffff',
+      borderRadius: '16px',
+      boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+      padding: '2rem'
+    } as React.CSSProperties,
+    cardTitle: {
+      fontSize: '1.5rem',
+      fontWeight: 700,
+      color: '#111827',
+      marginBottom: '0.5rem',
+      textAlign: 'center' as const
+    },
+    cardSubtitle: {
+      color: '#6b7280',
+      textAlign: 'center' as const,
+      marginBottom: '1.5rem',
+      fontSize: '0.875rem'
+    },
+    errorBox: {
+      backgroundColor: '#fef2f2',
+      border: '1px solid #fecaca',
+      color: '#b91c1c',
+      padding: '0.75rem 1rem',
+      borderRadius: '8px',
+      marginBottom: '1rem',
+      fontSize: '0.875rem'
+    } as React.CSSProperties,
+    successBox: {
+      backgroundColor: '#f0fdf4',
+      border: '1px solid #bbf7d0',
+      color: '#15803d',
+      padding: '0.75rem 1rem',
+      borderRadius: '8px',
+      marginBottom: '1rem',
+      fontSize: '0.875rem'
+    } as React.CSSProperties,
+    form: {
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '1rem'
+    },
+    label: {
+      display: 'block',
+      fontSize: '0.875rem',
+      fontWeight: 600,
+      color: '#374151',
+      marginBottom: '0.5rem'
+    } as React.CSSProperties,
+    input: {
+      width: '100%',
+      padding: '0.75rem 1rem',
+      backgroundColor: '#f9fafb',
+      border: '1px solid #e5e7eb',
+      borderRadius: '8px',
+      fontSize: '1rem',
+      color: '#111827',
+      outline: 'none',
+      transition: 'all 0.2s'
+    } as React.CSSProperties,
+    button: {
+      width: '100%',
+      backgroundColor: '#2563eb',
+      color: '#ffffff',
+      fontWeight: 700,
+      padding: '0.875rem 1.5rem',
+      borderRadius: '8px',
+      border: 'none',
+      fontSize: '1rem',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      marginTop: '0.5rem'
+    } as React.CSSProperties,
+    buttonDisabled: {
+      opacity: 0.5,
+      cursor: 'not-allowed'
+    } as React.CSSProperties,
+    switchContainer: {
+      marginTop: '1.5rem',
+      textAlign: 'center' as const
+    },
+    switchText: {
+      color: '#6b7280',
+      fontSize: '0.875rem'
+    } as React.CSSProperties,
+    switchButton: {
+      color: '#2563eb',
+      fontWeight: 600,
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '0.875rem'
+    } as React.CSSProperties,
+    footer: {
+      marginTop: '2rem',
+      textAlign: 'center' as const
+    },
+    footerText: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1.5rem',
+      color: '#93c5fd',
+      fontSize: '0.75rem'
+    } as React.CSSProperties
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div style={styles.container}>
+      <div style={styles.wrapper}>
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-4">
-            <span className="text-2xl font-black text-blue-600">P</span>
+        <div style={styles.logoContainer}>
+          <div style={styles.logoIcon}>
+            <span style={styles.logoText}>P</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
-            Pro<span className="text-blue-200">Invoice</span>
+          <h1 style={styles.title}>
+            Pro<span style={{ color: '#93c5fd' }}>Invoice</span>
           </h1>
-          <p className="text-blue-200 mt-2">Sistema de Faturamento Profissional</p>
+          <p style={styles.subtitle}>Sistema de Faturamento Profissional</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>
             {isLogin ? 'Bem-vindo de volta!' : 'Crie sua conta'}
           </h2>
-          <p className="text-gray-500 text-center mb-6">
+          <p style={styles.cardSubtitle}>
             {isLogin
               ? 'Entre para acessar seu painel.'
               : 'Comece a gerenciar suas faturas.'}
           </p>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div style={styles.errorBox}>{error}</div>}
+          {success && <div style={styles.successBox}>{success}</div>}
 
-          {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm">
-              {success}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} style={styles.form}>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email
-              </label>
+              <label style={styles.label}>Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
+                style={styles.input}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Senha
-              </label>
+              <label style={styles.label}>Senha</label>
               <input
                 type="password"
                 value={password}
@@ -113,21 +253,24 @@ const AuthPage: React.FC = () => {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition-all text-gray-900"
+                style={styles.input}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                ...styles.button,
+                ...(loading ? styles.buttonDisabled : {})
+              }}
             >
               {loading ? 'Aguarde...' : isLogin ? 'Entrar' : 'Criar Conta'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-500 text-sm">
+          <div style={styles.switchContainer}>
+            <p style={styles.switchText}>
               {isLogin ? 'Não tem conta?' : 'Já tem conta?'}{' '}
               <button
                 onClick={() => {
@@ -135,7 +278,7 @@ const AuthPage: React.FC = () => {
                   setError('');
                   setSuccess('');
                 }}
-                className="text-blue-600 hover:text-blue-800 font-semibold"
+                style={styles.switchButton}
               >
                 {isLogin ? 'Criar agora' : 'Fazer login'}
               </button>
@@ -144,8 +287,8 @@ const AuthPage: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center">
-          <div className="flex items-center justify-center space-x-6 text-blue-200 text-xs">
+        <div style={styles.footer}>
+          <div style={styles.footerText}>
             <span>🔒 Conexão Segura</span>
             <span>🛡️ Dados Protegidos</span>
           </div>
