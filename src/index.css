@@ -112,6 +112,8 @@ input:focus, textarea:focus, select:focus {
     -webkit-appearance: none;
     overflow: visible !important;
     height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
     font-size: inherit !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
@@ -129,13 +131,27 @@ input:focus, textarea:focus, select:focus {
     min-width: 120px !important;
     display: block !important;
     height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
     line-height: 1.4 !important;
+    overflow: visible !important;
   }
   
-  /* Force textarea to show full content */
+  /* Force textarea to show full content in print */
   .invoice-description {
     overflow: visible !important;
     resize: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+  
+  /* Hide textarea and show content as plain text */
+  .invoice-description-cell .print-description {
+    display: block !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
   }
   
   .input-ghost:hover {
