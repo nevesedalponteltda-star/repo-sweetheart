@@ -151,9 +151,7 @@ input:focus, textarea:focus, select:focus {
   }
   
   /* Description column - natural text flow like the system */
-  .invoice-description-cell,
-  .invoice-description,
-  .invoice-description-cell textarea {
+  .invoice-description-cell {
     white-space: pre-wrap !important;
     word-break: normal !important;
     overflow-wrap: break-word !important;
@@ -166,6 +164,12 @@ input:focus, textarea:focus, select:focus {
     overflow-y: visible !important;
     width: 100% !important;
     max-width: 100% !important;
+  }
+  
+  /* Hide textarea in print - use print-only-description instead */
+  .invoice-description-cell .screen-only-textarea,
+  .invoice-description-cell textarea.screen-only-textarea {
+    display: none !important;
   }
   
   .input-ghost:hover {
