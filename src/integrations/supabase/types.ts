@@ -243,6 +243,62 @@ export type Database = {
         }
         Relationships: []
       }
+      recurring_invoices: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          end_date: string | null
+          frequency: string
+          id: string
+          invoice_template: Json
+          invoices_generated: number
+          is_active: boolean
+          last_generated_at: string | null
+          next_invoice_date: string
+          start_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          frequency: string
+          id?: string
+          invoice_template: Json
+          invoices_generated?: number
+          is_active?: boolean
+          last_generated_at?: string | null
+          next_invoice_date: string
+          start_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          invoice_template?: Json
+          invoices_generated?: number
+          is_active?: boolean
+          last_generated_at?: string | null
+          next_invoice_date?: string
+          start_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_invoices_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

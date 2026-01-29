@@ -251,6 +251,15 @@ const Layout: React.FC<LayoutProps> = ({ children, user }) => {
                 Faturas
               </Link>
               <Link 
+                to="/recurring" 
+                style={{
+                  ...styles.navLink,
+                  ...(isActive('/recurring') ? styles.navLinkActive : {})
+                }}
+              >
+                Recorrentes
+              </Link>
+              <Link 
                 to="/clients" 
                 style={{
                   ...styles.navLink,
@@ -321,6 +330,15 @@ const Layout: React.FC<LayoutProps> = ({ children, user }) => {
               }}
             >
               📄 Minhas Faturas
+            </Link>
+            <Link 
+              to="/recurring" 
+              style={{
+                ...styles.mobileNavLink,
+                ...(isActive('/recurring') ? styles.mobileNavLinkActive : {})
+              }}
+            >
+              🔄 Recorrentes
             </Link>
             <Link 
               to="/clients" 
