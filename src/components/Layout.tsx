@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/src/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import proinvoiceLogo from '@/src/assets/proinvoice-logo.png';
+import InstallPWAButton from './InstallPWAButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -375,6 +376,9 @@ const Layout: React.FC<LayoutProps> = ({ children, user }) => {
           © {new Date().getFullYear()} ProInvoice
         </p>
       </footer>
+
+      {/* PWA Install Button */}
+      <InstallPWAButton />
     </div>
   );
 };
