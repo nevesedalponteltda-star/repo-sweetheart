@@ -10,14 +10,15 @@ const AutoResizeTextarea: React.FC<{
   className?: string;
   rows?: number;
   style?: React.CSSProperties;
-}> = ({ value, onChange, placeholder, className, rows = 1, style }) => {
+}> = ({ value, onChange, placeholder, className, rows = 2, style }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const adjustHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+      const newHeight = Math.max(textarea.scrollHeight, 48);
+      textarea.style.height = `${newHeight}px`;
     }
   };
 
@@ -34,7 +35,14 @@ const AutoResizeTextarea: React.FC<{
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onInput={adjustHeight}
-      style={style}
+      style={{
+        ...style,
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'break-word',
+        overflowWrap: 'break-word',
+        resize: 'none',
+        lineHeight: '1.4',
+      }}
     />
   );
 };
@@ -933,13 +941,13 @@ const InvoiceEditorPage: React.FC = () => {
           <tbody>
             {invoice.items.map((item) => (
               <tr key={item.id}>
-                <td style={styles.td} className="invoice-description-cell">
+                <td style={{ ...styles.td, verticalAlign: 'top' }} className="invoice-description-cell">
                   <AutoResizeTextarea
                     value={item.description}
                     onChange={(val) => handleItemChange(item.id, 'description', val)}
-                    placeholder="Descrição do serviço..."
+                    placeholder="Descrição do serviço ou produto detalhado..."
                     className="input-ghost invoice-description"
-                    style={{ width: '100%', minHeight: '24px' }}
+                    style={{ width: '100%', minHeight: '48px', fontSize: '0.875rem' }}
                   />
                 </td>
                 <td style={{ ...styles.td, textAlign: 'center' }}>

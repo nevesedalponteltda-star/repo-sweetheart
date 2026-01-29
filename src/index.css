@@ -172,35 +172,42 @@ input:focus, textarea:focus, select:focus {
 /* Mobile Print - more aggressive scaling */
 @media print and (max-width: 600px) {
   .invoice-card {
-    padding: 5mm !important;
-    font-size: 8px !important;
+    padding: 4mm !important;
+    font-size: 7px !important;
   }
   
   .invoice-container {
-    transform: scale(0.65);
+    transform: scale(0.55);
     transform-origin: top left;
-    width: 154% !important;
+    width: 182% !important;
   }
   
   @page {
-    margin: 3mm;
+    margin: 2mm;
   }
   
   /* Compact header section */
   .invoice-header {
-    gap: 0.5rem !important;
+    gap: 0.25rem !important;
   }
   
   /* Smaller table padding */
   .invoice-table td,
   .invoice-table th {
-    padding: 4px 6px !important;
+    padding: 2px 4px !important;
   }
   
   /* Hide notes/terms if too long */
   .invoice-notes {
-    max-height: 60px;
+    max-height: 40px;
     overflow: hidden;
+  }
+  
+  /* Force description to wrap in mobile print */
+  .invoice-description-cell,
+  .invoice-description {
+    font-size: 6px !important;
+    line-height: 1.2 !important;
   }
 }
 
