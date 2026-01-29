@@ -51,6 +51,7 @@ const styles = {
   container: {
     maxWidth: '960px',
     margin: '0 auto',
+    padding: '0 1rem',
     paddingBottom: '6rem'
   },
   actionBar: {
@@ -58,15 +59,15 @@ const styles = {
     flexWrap: 'wrap' as const,
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: '1rem',
+    gap: '0.75rem',
     backgroundColor: '#ffffff',
     border: '1px solid #e5e7eb',
     borderRadius: '1rem',
-    padding: '1rem',
+    padding: '0.75rem 1rem',
     position: 'sticky' as const,
     top: '80px',
     zIndex: 40,
-    marginBottom: '2rem',
+    marginBottom: '1.5rem',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
   },
   backBtn: {
@@ -131,14 +132,17 @@ const styles = {
     border: '1px solid #e5e7eb',
     borderRadius: '1rem',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    padding: '2.5rem',
-    marginBottom: '2rem'
+    padding: '1.5rem',
+    marginBottom: '2rem',
+    overflow: 'hidden'
   },
   header: {
     display: 'flex',
+    flexWrap: 'wrap' as const,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: '2rem'
+    gap: '1rem',
+    marginBottom: '1.5rem'
   },
   logoBox: {
     width: '100px',
@@ -195,8 +199,8 @@ const styles = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '2rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '1.5rem',
     marginBottom: '1.5rem'
   },
   section: {

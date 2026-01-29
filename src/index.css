@@ -268,3 +268,47 @@ input:focus, textarea:focus, select:focus {
   border-radius: 1rem;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 640px) {
+  .invoice-print {
+    padding: 1rem !important;
+  }
+  
+  .invoice-print table {
+    font-size: 0.75rem;
+  }
+  
+  .invoice-print th,
+  .invoice-print td {
+    padding: 0.5rem 0.25rem !important;
+  }
+  
+  /* Stack invoice header on mobile */
+  .invoice-print .invoice-header {
+    flex-direction: column;
+  }
+  
+  /* Make table scrollable horizontally on mobile */
+  .invoice-print table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .invoice-print thead,
+  .invoice-print tbody,
+  .invoice-print tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Allow description to wrap */
+  .invoice-description-cell,
+  .invoice-description {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    min-width: 120px !important;
+  }
+}
