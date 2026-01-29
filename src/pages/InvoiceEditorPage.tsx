@@ -946,11 +946,25 @@ const InvoiceEditorPage: React.FC = () => {
             {invoice.items.map((item) => (
               <tr key={item.id}>
                 <td style={{ ...styles.td, verticalAlign: 'top' }} className="invoice-description-cell">
+                  {/* Hidden span for print - shows full text */}
+                  <span 
+                    className="print-description" 
+                    style={{ 
+                      display: 'none',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                      fontSize: '0.875rem',
+                      lineHeight: '1.4'
+                    }}
+                  >
+                    {item.description || ''}
+                  </span>
+                  {/* Textarea for editing - hidden in print */}
                   <AutoResizeTextarea
                     value={item.description}
                     onChange={(val) => handleItemChange(item.id, 'description', val)}
                     placeholder="Descrição do serviço ou produto detalhado..."
-                    className="input-ghost invoice-description"
+                    className="input-ghost invoice-description no-print"
                     style={{ width: '100%', minHeight: '48px', fontSize: '0.875rem' }}
                   />
                 </td>
