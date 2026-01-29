@@ -933,12 +933,13 @@ const InvoiceEditorPage: React.FC = () => {
           <tbody>
             {invoice.items.map((item) => (
               <tr key={item.id}>
-                <td style={styles.td}>
-                  <input
-                    style={{ ...styles.inputGhost, width: '100%' }}
-                    placeholder="Descrição do serviço..."
+                <td style={styles.td} className="invoice-description-cell">
+                  <AutoResizeTextarea
                     value={item.description}
-                    onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
+                    onChange={(val) => handleItemChange(item.id, 'description', val)}
+                    placeholder="Descrição do serviço..."
+                    className="input-ghost invoice-description"
+                    style={{ width: '100%', minHeight: '24px' }}
                   />
                 </td>
                 <td style={{ ...styles.td, textAlign: 'center' }}>
