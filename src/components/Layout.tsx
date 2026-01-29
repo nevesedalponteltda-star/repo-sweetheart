@@ -270,6 +270,15 @@ const Layout: React.FC<LayoutProps> = ({ children, user }) => {
                 Clientes
               </Link>
               <Link 
+                to="/catalog" 
+                style={{
+                  ...styles.navLink,
+                  ...(isActive('/catalog') ? styles.navLinkActive : {})
+                }}
+              >
+                Catálogo
+              </Link>
+              <Link 
                 to="/settings" 
                 style={{
                   ...styles.navLink,
@@ -349,6 +358,15 @@ const Layout: React.FC<LayoutProps> = ({ children, user }) => {
               }}
             >
               👥 Clientes
+            </Link>
+            <Link 
+              to="/catalog" 
+              style={{
+                ...styles.mobileNavLink,
+                ...(isActive('/catalog') ? styles.mobileNavLinkActive : {})
+              }}
+            >
+              📦 Catálogo
             </Link>
             <Link 
               to="/settings" 

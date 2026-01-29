@@ -384,8 +384,11 @@ const InvoiceEditorPage: React.FC = () => {
   const [loading, setLoading] = useState(!!id);
   const [saving, setSaving] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const [catalogItems, setCatalogItems] = useState<any[]>([]);
   const [showClientDropdown, setShowClientDropdown] = useState(false);
+  const [showCatalogDropdown, setShowCatalogDropdown] = useState(false);
   const [clientSearch, setClientSearch] = useState('');
+  const [catalogSearch, setCatalogSearch] = useState('');
   
   const [invoice, setInvoice] = useState<Invoice>({
     id: crypto.randomUUID(),
@@ -408,6 +411,7 @@ const InvoiceEditorPage: React.FC = () => {
 
   useEffect(() => {
     loadClients();
+    loadCatalogItems();
     if (id) {
       loadInvoice(id);
     } else {
@@ -430,6 +434,21 @@ const InvoiceEditorPage: React.FC = () => {
       setClients(data || []);
     } catch (err) {
       console.error('Error loading clients:', err);
+    }
+  };
+
+  const loadCatalogItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('catalog_items')
+        .select('*')
+        .eq('is_active', true)
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      setCatalogItems(data || []);
+    } catch (err) {
+      console.error('Error loading catalog:', err);
     }
   };
 
@@ -613,6 +632,24 @@ const InvoiceEditorPage: React.FC = () => {
     });
     setShowClientDropdown(false);
     setClientSearch('');
+  };
+
+  const handleSelectCatalogItem = (catalogItem: any) => {
+    const newItem = {
+      id: crypto.randomUUID(),
+      description: catalogItem.description 
+        ? `${catalogItem.name}\n${catalogItem.description}` 
+        : catalogItem.name,
+      quantity: 1,
+      rate: catalogItem.rate,
+      total: catalogItem.rate,
+    };
+    setInvoice({
+      ...invoice,
+      items: [...invoice.items, newItem],
+    });
+    setShowCatalogDropdown(false);
+    setCatalogSearch('');
   };
 
   const handleStatusChange = async (newStatus: InvoiceStatus) => {
@@ -996,20 +1033,111 @@ const InvoiceEditorPage: React.FC = () => {
           </tbody>
         </table>
 
-        <button onClick={handleAddItem} style={styles.addItemBtn} className="no-print">
-          <span style={{ 
-            width: '20px', 
-            height: '20px', 
-            borderRadius: '50%', 
-            backgroundColor: '#2563eb', 
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.875rem'
-          }}>+</span>
-          Adicionar Item
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', position: 'relative' }} className="no-print">
+          <button onClick={handleAddItem} style={styles.addItemBtn}>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '50%', 
+              backgroundColor: '#2563eb', 
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.875rem'
+            }}>+</span>
+            Adicionar Item
+          </button>
+
+          {catalogItems.length > 0 && (
+            <div style={{ position: 'relative' }}>
+              <button 
+                onClick={() => setShowCatalogDropdown(!showCatalogDropdown)} 
+                style={{ ...styles.addItemBtn, color: '#16a34a' }}
+              >
+                <span style={{ 
+                  width: '20px', 
+                  height: '20px', 
+                  borderRadius: '50%', 
+                  backgroundColor: '#16a34a', 
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.875rem'
+                }}>📦</span>
+                Do Catálogo
+              </button>
+
+              {showCatalogDropdown && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+                  zIndex: 50,
+                  width: '300px',
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  marginTop: '0.5rem'
+                }}>
+                  <input
+                    type="text"
+                    placeholder="🔍 Buscar no catálogo..."
+                    value={catalogSearch}
+                    onChange={(e) => setCatalogSearch(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      border: 'none',
+                      borderBottom: '1px solid #e5e7eb',
+                      fontSize: '0.875rem',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                  {catalogItems
+                    .filter(item => 
+                      item.name.toLowerCase().includes(catalogSearch.toLowerCase()) ||
+                      (item.description && item.description.toLowerCase().includes(catalogSearch.toLowerCase()))
+                    )
+                    .map(item => (
+                      <div
+                        key={item.id}
+                        onClick={() => handleSelectCatalogItem(item)}
+                        style={{
+                          padding: '0.75rem 1rem',
+                          cursor: 'pointer',
+                          borderBottom: '1px solid #f3f4f6',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.125rem' }}>
+                          {item.name}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#6b7280' }}>
+                          <span>{item.category || 'Sem categoria'}</span>
+                          <span style={{ fontWeight: 700, color: '#16a34a' }}>R$ {item.rate.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    ))
+                  }
+                  {catalogItems.filter(item => 
+                    item.name.toLowerCase().includes(catalogSearch.toLowerCase())
+                  ).length === 0 && (
+                    <div style={{ padding: '1rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>
+                      Nenhum item encontrado
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Totals - Compact */}
         <div style={styles.totalsContainer}>
