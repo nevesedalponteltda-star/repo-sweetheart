@@ -9,6 +9,7 @@ import ClientsPage from './pages/ClientsPage';
 import SettingsPage from './pages/SettingsPage';
 import InstallPage from './pages/InstallPage';
 import RecurringInvoicesPage from './pages/RecurringInvoicesPage';
+import CatalogPage from './pages/CatalogPage';
 import Layout from './components/Layout';
 
 const App: React.FC = () => {
@@ -59,6 +60,7 @@ const App: React.FC = () => {
         <Route path="/invoice/:id" element={<InvoiceEditorPage />} />
         <Route path="/clients" element={<ClientsPage />} />
         <Route path="/recurring" element={<RecurringInvoicesPage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/install" element={<InstallPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
