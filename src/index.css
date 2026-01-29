@@ -77,10 +77,27 @@ input:focus, textarea:focus, select:focus {
   min-height: 1.5em;
 }
 
+/* Print/Screen visibility classes */
+.print-only-description {
+  display: none;
+}
+
+.screen-only-textarea {
+  display: block;
+}
+
 /* Print Styles */
 @media print {
-  .no-print {
+  .no-print,
+  .screen-only-textarea {
     display: none !important;
+  }
+  
+  .print-only-description {
+    display: block !important;
+    white-space: pre-wrap !important;
+    word-break: normal !important;
+    line-height: 1.5 !important;
   }
   
   body {
