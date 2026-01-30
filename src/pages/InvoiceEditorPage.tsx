@@ -858,35 +858,59 @@ const InvoiceEditorPage: React.FC = () => {
     // Create a temporary container with the invoice HTML
     const tempContainer = document.createElement('div');
     tempContainer.id = 'pdf-render-container';
-    // Make it visible for html2canvas to capture properly
-    tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '0';
-    tempContainer.style.top = '0';
-    tempContainer.style.width = '794px'; // A4 width at 96dpi
-    tempContainer.style.backgroundColor = 'white';
-    tempContainer.style.zIndex = '9999';
-    tempContainer.style.padding = '0';
-    tempContainer.style.margin = '0';
+    
+    // CRITICAL: Container must be visible and in the viewport for html2canvas
+    tempContainer.style.cssText = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 794px !important;
+      min-height: 1123px !important;
+      background-color: #ffffff !important;
+      z-index: 99999 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: visible !important;
+    `;
     
     const htmlContent = generateInvoiceHtml(invoice);
     tempContainer.innerHTML = htmlContent;
     document.body.appendChild(tempContainer);
     
-    // Wait for DOM to fully render
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // Force layout recalculation
+    tempContainer.offsetHeight;
+    
+    // Wait for DOM to fully render with images
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     const opt = {
-      margin: 0,
+      margin: [10, 10, 10, 10],
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { 
-        scale: 2, 
+        scale: 2,
         useCORS: true,
+        allowTaint: true,
         letterRendering: true,
-        logging: false,
+        logging: true, // Enable logging for debugging
         backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
         width: 794,
-        windowWidth: 794
+        height: tempContainer.scrollHeight,
+        windowWidth: 794,
+        windowHeight: tempContainer.scrollHeight,
+        onclone: (clonedDoc: Document) => {
+          const clonedContainer = clonedDoc.getElementById('pdf-render-container');
+          if (clonedContainer) {
+            clonedContainer.style.transform = 'none';
+            clonedContainer.style.position = 'absolute';
+            clonedContainer.style.left = '0';
+            clonedContainer.style.top = '0';
+          }
+        }
       },
       jsPDF: { 
         unit: 'mm', 
@@ -897,7 +921,14 @@ const InvoiceEditorPage: React.FC = () => {
     };
 
     try {
+      console.log('Starting PDF generation...');
+      console.log('Container dimensions:', tempContainer.offsetWidth, 'x', tempContainer.offsetHeight);
+      console.log('Container innerHTML length:', tempContainer.innerHTML.length);
+      
       const pdfBlob = await html2pdf().set(opt).from(tempContainer).outputPdf('blob');
+      
+      console.log('PDF blob size:', pdfBlob.size);
+      
       document.body.removeChild(tempContainer);
       return pdfBlob;
     } catch (err) {
