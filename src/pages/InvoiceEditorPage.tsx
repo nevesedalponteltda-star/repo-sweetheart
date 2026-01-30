@@ -889,22 +889,28 @@ const InvoiceEditorPage: React.FC = () => {
                 {invoice.company.address}
               </div>
             </div>
-            <input
-              style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
-              placeholder="email@empresa.com | Telefone"
-              value={`${invoice.company.email}${invoice.company.phone ? ' | ' + invoice.company.phone : ''}`}
-              onChange={(e) => {
-                const parts = e.target.value.split(' | ');
-                setInvoice({ 
-                  ...invoice, 
-                  company: { 
-                    ...invoice.company, 
-                    email: parts[0] || '',
-                    phone: parts[1] || ''
-                  } 
-                });
-              }}
-            />
+            <div className="invoice-address-cell">
+              <input
+                className="screen-only-textarea"
+                style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+                placeholder="email@empresa.com | Telefone"
+                value={`${invoice.company.email}${invoice.company.phone ? ' | ' + invoice.company.phone : ''}`}
+                onChange={(e) => {
+                  const parts = e.target.value.split(' | ');
+                  setInvoice({ 
+                    ...invoice, 
+                    company: { 
+                      ...invoice.company, 
+                      email: parts[0] || '',
+                      phone: parts[1] || ''
+                    } 
+                  });
+                }}
+              />
+              <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
+                {invoice.company.email}{invoice.company.phone ? ' | ' + invoice.company.phone : ''}
+              </div>
+            </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ marginBottom: '0.5rem' }}>
