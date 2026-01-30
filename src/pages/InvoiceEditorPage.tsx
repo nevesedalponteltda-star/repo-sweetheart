@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/src/integrations/supabase/client';
 import { InvoiceStatus, Invoice, InvoiceItem, Client } from '@/src/types';
+import html2pdf from 'html2pdf.js';
 
 const AutoResizeTextarea: React.FC<{
   value: string;
@@ -850,8 +851,150 @@ const InvoiceEditorPage: React.FC = () => {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
+  const [generatingPdf, setGeneratingPdf] = useState(false);
+
+  const generatePdfBlob = async (): Promise<Blob | null> => {
+    const element = document.querySelector('.invoice-print') as HTMLElement;
+    if (!element) return null;
+
+    // Clone the element for PDF generation
+    const clone = element.cloneNode(true) as HTMLElement;
+    
+    // Hide no-print elements and show print-only elements
+    clone.querySelectorAll('.no-print').forEach((el) => {
+      (el as HTMLElement).style.display = 'none';
+    });
+    clone.querySelectorAll('.screen-only-textarea').forEach((el) => {
+      (el as HTMLElement).style.display = 'none';
+    });
+    clone.querySelectorAll('.print-only-description').forEach((el) => {
+      (el as HTMLElement).style.display = 'block';
+    });
+    
+    // Apply print styles inline for PDF
+    clone.style.boxShadow = 'none';
+    clone.style.border = 'none';
+    clone.style.borderRadius = '0';
+    clone.style.padding = '8mm';
+    clone.style.margin = '0';
+    clone.style.width = '210mm';
+    clone.style.maxWidth = '210mm';
+    clone.style.minHeight = 'auto';
+    clone.style.fontSize = '11px';
+    clone.style.backgroundColor = 'white';
+    
+    // Style table header for print colors
+    clone.querySelectorAll('th').forEach((th) => {
+      (th as HTMLElement).style.backgroundColor = '#1e293b';
+      (th as HTMLElement).style.color = 'white';
+      (th as HTMLElement).style.printColorAdjust = 'exact';
+      (th as HTMLElement).style.setProperty('-webkit-print-color-adjust', 'exact');
+    });
+    
+    // Style inputs to look like text
+    clone.querySelectorAll('input, textarea, select').forEach((el) => {
+      (el as HTMLElement).style.border = 'none';
+      (el as HTMLElement).style.background = 'transparent';
+      (el as HTMLElement).style.padding = '0';
+    });
+
+    // Create temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.appendChild(clone);
+    document.body.appendChild(tempContainer);
+
+    const opt = {
+      margin: [5, 5, 5, 5],
+      filename: `Fatura_${invoice.invoiceNumber}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        letterRendering: true,
+        logging: false
+      },
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'portrait' 
+      },
+      pagebreak: { mode: 'avoid-all' }
+    };
+
+    try {
+      const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
+      document.body.removeChild(tempContainer);
+      return pdfBlob;
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+      document.body.removeChild(tempContainer);
+      return null;
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    setGeneratingPdf(true);
+    try {
+      const pdfBlob = await generatePdfBlob();
+      if (pdfBlob) {
+        const url = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Fatura_${invoice.invoiceNumber}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
+
+  const handleSharePdf = async () => {
+    setGeneratingPdf(true);
+    try {
+      const pdfBlob = await generatePdfBlob();
+      if (!pdfBlob) {
+        setGeneratingPdf(false);
+        return;
+      }
+
+      const file = new File([pdfBlob], `Fatura_${invoice.invoiceNumber}.pdf`, { 
+        type: 'application/pdf' 
+      });
+
+      // Check if Web Share API is available and supports files
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: `Fatura ${invoice.invoiceNumber}`,
+            text: `Fatura nº ${invoice.invoiceNumber} - ${invoice.currency} ${formatCurrency(invoice.total)}`,
+            files: [file]
+          });
+        } catch (shareErr) {
+          // User cancelled or share failed - fallback to download
+          if ((shareErr as Error).name !== 'AbortError') {
+            handleDownloadPdf();
+          }
+        }
+      } else {
+        // Fallback: Download the PDF if sharing is not supported
+        const url = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Fatura_${invoice.invoiceNumber}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    } finally {
+      setGeneratingPdf(false);
+    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -958,8 +1101,19 @@ const InvoiceEditorPage: React.FC = () => {
               ↺ Voltar para Rascunho
             </button>
           )}
-          <button onClick={handlePrint} style={styles.btnSecondary}>
-            🖨️ Imprimir / PDF
+          <button 
+            onClick={handleDownloadPdf} 
+            disabled={generatingPdf}
+            style={styles.btnSecondary}
+          >
+            {generatingPdf ? '⏳ Gerando...' : '📥 Baixar PDF'}
+          </button>
+          <button 
+            onClick={handleSharePdf} 
+            disabled={generatingPdf}
+            style={{ ...styles.btnSecondary, backgroundColor: '#f0fdf4', color: '#16a34a', borderColor: '#16a34a' }}
+          >
+            📤 Compartilhar
           </button>
           <button onClick={handleSave} disabled={saving} style={styles.btnPrimary}>
             {saving ? 'Salvando...' : 'Salvar Fatura'}
