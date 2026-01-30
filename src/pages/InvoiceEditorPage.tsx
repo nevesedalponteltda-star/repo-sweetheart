@@ -859,7 +859,8 @@ const InvoiceEditorPage: React.FC = () => {
     const tempContainer = document.createElement('div');
     tempContainer.id = 'pdf-render-container';
     
-    // CRITICAL: Container must be visible and in the viewport for html2canvas
+    // CRITICAL: Container must be in viewport for html2canvas to capture
+    // We position it behind everything and make it nearly invisible
     tempContainer.style.cssText = `
       position: fixed !important;
       top: 0 !important;
@@ -871,6 +872,7 @@ const InvoiceEditorPage: React.FC = () => {
       padding: 0 !important;
       margin: 0 !important;
       overflow: visible !important;
+      pointer-events: none !important;
     `;
     
     const htmlContent = generateInvoiceHtml(invoice);
