@@ -778,6 +778,8 @@ const InvoiceEditorPage: React.FC = () => {
             width: 210mm !important;
             height: 297mm !important;
             overflow: hidden !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
           #root {
             padding: 0 !important;
@@ -789,34 +791,34 @@ const InvoiceEditorPage: React.FC = () => {
             box-shadow: none !important; 
             border: none !important; 
             border-radius: 0 !important;
-            padding: 6mm !important;
+            padding: 8mm !important;
             margin: 0 !important;
-            width: 143% !important;
+            width: 125% !important;
             max-width: none !important;
-            transform: scale(0.70);
+            transform: scale(0.80);
             transform-origin: top left;
-            font-size: 10px !important;
+            font-size: 11px !important;
             min-height: auto !important;
             max-height: 297mm !important;
             overflow: hidden !important;
             page-break-inside: avoid !important;
           }
           .invoice-print * {
-            line-height: 1.2 !important;
+            line-height: 1.35 !important;
           }
           .invoice-print table {
-            font-size: 9px !important;
+            font-size: 10px !important;
           }
           .invoice-print h1 {
-            font-size: 1.75rem !important;
+            font-size: 2rem !important;
           }
           .invoice-notes {
-            font-size: 9px !important;
-            margin-top: 0.5rem !important;
-            padding-top: 0.5rem !important;
+            font-size: 10px !important;
+            margin-top: 0.75rem !important;
+            padding-top: 0.75rem !important;
           }
           @page { 
-            margin: 0; 
+            margin: 5mm !important; 
             size: A4; 
           }
         }
