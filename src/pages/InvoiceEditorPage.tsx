@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/src/integrations/supabase/client';
 import { InvoiceStatus, Invoice, InvoiceItem, Client } from '@/src/types';
+import html2pdf from 'html2pdf.js';
 
 const AutoResizeTextarea: React.FC<{
   value: string;
@@ -745,6 +746,94 @@ const InvoiceEditorPage: React.FC = () => {
     window.print();
   };
 
+  const generatePDF = async (): Promise<Blob | null> => {
+    const element = document.querySelector('.invoice-print') as HTMLElement;
+    if (!element) return null;
+
+    // Hide no-print elements temporarily
+    const noPrintElements = element.querySelectorAll('.no-print');
+    noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
+
+    const opt = {
+      margin: 5,
+      filename: `Fatura_${invoice.invoiceNumber}.pdf`,
+      image: { type: 'jpeg' as const, quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        letterRendering: true 
+      },
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+    };
+
+    try {
+      const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+      return pdfBlob;
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      return null;
+    } finally {
+      // Restore no-print elements
+      noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    const element = document.querySelector('.invoice-print') as HTMLElement;
+    if (!element) return;
+
+    // Hide no-print elements temporarily
+    const noPrintElements = element.querySelectorAll('.no-print');
+    noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
+
+    const opt = {
+      margin: 5,
+      filename: `Fatura_${invoice.invoiceNumber}.pdf`,
+      image: { type: 'jpeg' as const, quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        letterRendering: true 
+      },
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Erro ao gerar PDF. Tente novamente.');
+    } finally {
+      // Restore no-print elements
+      noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
+    }
+  };
+
+  const handleShareWhatsApp = async () => {
+    // First download the PDF, then open WhatsApp with a message
+    await handleDownloadPDF();
+    
+    const message = encodeURIComponent(
+      `Olá! Segue a fatura ${invoice.invoiceNumber} no valor de ${formatCurrency(invoice.total)}.\n\nPor favor, confira o PDF anexado.`
+    );
+    
+    // Open WhatsApp with pre-filled message
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+  };
+
+  const handleShareEmail = async () => {
+    // First download the PDF
+    await handleDownloadPDF();
+    
+    const subject = encodeURIComponent(`Fatura ${invoice.invoiceNumber}`);
+    const body = encodeURIComponent(
+      `Olá,\n\nSegue em anexo a fatura ${invoice.invoiceNumber}.\n\nDetalhes:\n- Número: ${invoice.invoiceNumber}\n- Cliente: ${invoice.client.name}\n- Valor Total: ${formatCurrency(invoice.total)}\n- Vencimento: ${formatDate(invoice.dueDate)}\n\nPor favor, encontre o PDF anexado a este email.\n\nAtenciosamente,\n${invoice.company.name}`
+    );
+    
+    // Open email client with pre-filled content
+    window.location.href = `mailto:${invoice.client.email || ''}?subject=${subject}&body=${body}`;
+  };
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
@@ -838,7 +927,7 @@ const InvoiceEditorPage: React.FC = () => {
               onClick={() => handleStatusChange(InvoiceStatus.PAID)} 
               style={styles.btnSuccess}
             >
-              ✓ Marcar como Paga
+              ✓ Paga
             </button>
           )}
           {invoice.status === InvoiceStatus.PAID && (
@@ -846,14 +935,28 @@ const InvoiceEditorPage: React.FC = () => {
               onClick={() => handleStatusChange(InvoiceStatus.DRAFT)} 
               style={styles.btnWarning}
             >
-              ↺ Voltar para Rascunho
+              ↺ Rascunho
             </button>
           )}
-          <button onClick={handlePrint} style={styles.btnSecondary}>
-            🖨️ Imprimir / PDF
+          <button onClick={handleDownloadPDF} style={styles.btnSecondary} title="Baixar PDF">
+            📄 PDF
+          </button>
+          <button 
+            onClick={handleShareWhatsApp} 
+            style={{ ...styles.btnSecondary, borderColor: '#25d366', color: '#25d366' }}
+            title="Compartilhar via WhatsApp"
+          >
+            💬 WhatsApp
+          </button>
+          <button 
+            onClick={handleShareEmail} 
+            style={{ ...styles.btnSecondary, borderColor: '#ea4335', color: '#ea4335' }}
+            title="Enviar por Email"
+          >
+            ✉️ Email
           </button>
           <button onClick={handleSave} disabled={saving} style={styles.btnPrimary}>
-            {saving ? 'Salvando...' : 'Salvar Fatura'}
+            {saving ? 'Salvando...' : 'Salvar'}
           </button>
         </div>
       </div>
