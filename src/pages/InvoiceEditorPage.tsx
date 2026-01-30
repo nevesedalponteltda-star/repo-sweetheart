@@ -199,7 +199,13 @@ const styles = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '1.5rem',
+    marginBottom: '1.5rem'
+  },
+  gridMobile: {
+    display: 'flex',
+    flexDirection: 'column' as const,
     gap: '1.5rem',
     marginBottom: '1.5rem'
   },
@@ -308,6 +314,11 @@ const styles = {
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '1.5rem'
   },
+  settingsGridMobile: {
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gap: '1rem'
+  },
   input: {
     width: '100%',
     padding: '0.5rem 0.75rem',
@@ -389,6 +400,14 @@ const InvoiceEditorPage: React.FC = () => {
   const [showCatalogDropdown, setShowCatalogDropdown] = useState(false);
   const [clientSearch, setClientSearch] = useState('');
   const [catalogSearch, setCatalogSearch] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   const [invoice, setInvoice] = useState<Invoice>({
     id: crypto.randomUUID(),
@@ -892,7 +911,7 @@ const InvoiceEditorPage: React.FC = () => {
         <div style={styles.divider}></div>
 
         {/* Info Grid */}
-        <div style={styles.grid}>
+        <div style={isMobile ? styles.gridMobile : styles.grid}>
           <div>
             <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>DE:</p>
             <input
@@ -951,24 +970,24 @@ const InvoiceEditorPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ marginBottom: '0.5rem' }}>
+          <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '0.25rem' : '0.5rem', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
               <span style={styles.labelSmall}>Emissão: </span>
               <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.date)}</span>
               <input
                 type="date"
-                style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                style={{ ...styles.inputGhost, width: isMobile ? '100%' : '130px', textAlign: isMobile ? 'left' : 'right' }}
                 value={invoice.date}
                 onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
                 className="no-print"
               />
             </div>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '0.25rem' : '0.5rem', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
               <span style={styles.labelSmall}>Vencimento: </span>
               <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.dueDate)}</span>
               <input
                 type="date"
-                style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                style={{ ...styles.inputGhost, width: isMobile ? '100%' : '130px', textAlign: isMobile ? 'left' : 'right' }}
                 value={invoice.dueDate}
                 onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
                 className="no-print"
@@ -1265,7 +1284,7 @@ const InvoiceEditorPage: React.FC = () => {
           }}>⚙</span>
           Configurações
         </h3>
-        <div style={styles.settingsGrid}>
+        <div style={isMobile ? styles.settingsGridMobile : styles.settingsGrid}>
           <div>
             <label style={{ ...styles.labelSmall, display: 'block', marginBottom: '0.5rem' }}>Imposto (%)</label>
             <input
