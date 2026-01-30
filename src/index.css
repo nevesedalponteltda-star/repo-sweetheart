@@ -204,25 +204,25 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-/* Mobile Print - optimized single page */
+/* Mobile Print - uses same scaling as desktop for consistency */
 @media print and (max-width: 600px) {
   .invoice-card {
-    padding: 3mm !important;
-    font-size: 9px !important;
+    padding: 8mm !important;
+    font-size: 10px !important;
     min-height: auto !important;
-    max-height: 100vh !important;
+    max-height: none !important;
   }
   
   .invoice-container {
-    transform: scale(0.75);
+    transform: scale(0.78);
     transform-origin: top left;
-    width: 133% !important;
-    max-height: 100vh !important;
-    overflow: hidden !important;
+    width: 128% !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
   
   @page {
-    margin: 1mm;
+    margin: 0;
     size: A4 portrait;
   }
   
@@ -234,20 +234,14 @@ input:focus, textarea:focus, select:focus {
   /* Smaller table padding */
   .invoice-table td,
   .invoice-table th {
-    padding: 3px 5px !important;
-  }
-  
-  /* Hide notes/terms if too long */
-  .invoice-notes {
-    max-height: 50px;
-    overflow: hidden;
+    padding: 4px 6px !important;
   }
   
   /* Description uses full width with natural flow */
   .invoice-description-cell,
   .invoice-description,
-  .invoice-description-cell .print-description {
-    font-size: 0.7rem !important;
+  .invoice-address-cell {
+    font-size: 0.75rem !important;
     line-height: 1.4 !important;
     white-space: pre-wrap !important;
     word-break: normal !important;
@@ -257,11 +251,6 @@ input:focus, textarea:focus, select:focus {
     display: block !important;
     height: auto !important;
     overflow: visible !important;
-  }
-  
-  /* Remove excessive gaps */
-  .invoice-card > * {
-    margin-bottom: 0.25rem !important;
   }
 }
 
