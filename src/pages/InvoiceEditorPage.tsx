@@ -52,7 +52,7 @@ const styles = {
   container: {
     maxWidth: '960px',
     margin: '0 auto',
-    padding: '0 1rem',
+    padding: '0 0.5rem',
     paddingBottom: '6rem'
   },
   actionBar: {
@@ -60,15 +60,15 @@ const styles = {
     flexWrap: 'wrap' as const,
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: '0.75rem',
+    gap: '0.5rem',
     backgroundColor: '#ffffff',
     border: '1px solid #e5e7eb',
     borderRadius: '1rem',
-    padding: '0.75rem 1rem',
+    padding: '0.75rem',
     position: 'sticky' as const,
-    top: '80px',
+    top: '60px',
     zIndex: 40,
-    marginBottom: '1.5rem',
+    marginBottom: '1rem',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
   },
   backBtn: {
@@ -84,70 +84,79 @@ const styles = {
   },
   actionBtns: {
     display: 'flex',
-    gap: '0.75rem',
-    flexWrap: 'wrap' as const
+    gap: '0.5rem',
+    flexWrap: 'wrap' as const,
+    justifyContent: 'flex-end',
+    flex: 1
   },
   btnSecondary: {
     backgroundColor: 'transparent',
     color: '#2563eb',
-    padding: '0.5rem 1rem',
+    padding: '0.4rem 0.75rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: '2px solid #2563eb',
     cursor: 'pointer',
-    fontSize: '0.75rem'
+    fontSize: '0.7rem',
+    whiteSpace: 'nowrap' as const
   },
   btnPrimary: {
     backgroundColor: '#2563eb',
     color: '#ffffff',
-    padding: '0.5rem 1rem',
+    padding: '0.4rem 0.75rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.75rem',
-    boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)'
+    fontSize: '0.7rem',
+    boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)',
+    whiteSpace: 'nowrap' as const
   },
   btnSuccess: {
     backgroundColor: '#16a34a',
     color: '#ffffff',
-    padding: '0.5rem 1rem',
+    padding: '0.4rem 0.75rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.75rem'
+    fontSize: '0.7rem',
+    whiteSpace: 'nowrap' as const
   },
   btnWarning: {
     backgroundColor: '#f59e0b',
     color: '#ffffff',
-    padding: '0.5rem 1rem',
+    padding: '0.4rem 0.75rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.75rem'
+    fontSize: '0.7rem',
+    whiteSpace: 'nowrap' as const
   },
   invoiceCard: {
     backgroundColor: '#ffffff',
     border: '1px solid #e5e7eb',
-    borderRadius: '1rem',
+    borderRadius: '0.75rem',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    padding: '1.5rem',
+    padding: '1rem',
     marginBottom: '2rem',
-    overflow: 'hidden'
+    overflow: 'visible',
+    width: '100%',
+    boxSizing: 'border-box' as const
   },
   header: {
     display: 'flex',
     flexWrap: 'wrap' as const,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: '1rem',
-    marginBottom: '1.5rem'
+    gap: '0.75rem',
+    marginBottom: '1rem'
   },
   logoBox: {
-    width: '100px',
-    height: '100px',
+    width: '70px',
+    height: '70px',
+    minWidth: '70px',
     backgroundColor: '#f9fafb',
     border: '2px dashed #e5e7eb',
     display: 'flex',
@@ -163,109 +172,116 @@ const styles = {
     objectFit: 'contain' as const
   },
   invoiceTitle: {
-    fontSize: '2.5rem',
+    fontSize: '1.5rem',
     fontWeight: 900,
     color: '#111827',
     letterSpacing: '-0.05em',
     textTransform: 'uppercase' as const,
-    marginBottom: '0.5rem',
+    marginBottom: '0.25rem',
     textAlign: 'right' as const
   },
   labelSmall: {
-    fontSize: '0.625rem',
+    fontSize: '0.6rem',
     fontWeight: 800,
     color: '#9ca3af',
     textTransform: 'uppercase' as const,
-    letterSpacing: '0.15em'
+    letterSpacing: '0.1em'
   },
   inputGhost: {
     width: '100%',
-    padding: '0.25rem 0',
+    padding: '0.2rem 0',
     backgroundColor: 'transparent',
     border: 'none',
     borderBottom: '1px dashed transparent',
-    fontSize: '0.875rem',
+    fontSize: '0.8rem',
     color: '#111827',
-    outline: 'none'
+    outline: 'none',
+    boxSizing: 'border-box' as const
   },
   inputLarge: {
-    fontSize: '1.25rem',
+    fontSize: '1rem',
     fontWeight: 800,
     textTransform: 'uppercase' as const,
     letterSpacing: '-0.025em'
   },
   divider: {
     borderTop: '2px solid #111827',
-    margin: '1.5rem 0'
+    margin: '1rem 0'
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1.5rem',
-    marginBottom: '1.5rem'
+    gridTemplateColumns: '1fr',
+    gap: '1rem',
+    marginBottom: '1rem'
   },
   section: {
-    marginBottom: '1rem'
+    marginBottom: '0.75rem'
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse' as const,
-    marginBottom: '1.5rem'
+    marginBottom: '1rem',
+    tableLayout: 'fixed' as const
   },
   th: {
     backgroundColor: '#1e293b',
     color: '#ffffff',
-    padding: '0.75rem',
-    fontSize: '0.625rem',
+    padding: '0.5rem 0.25rem',
+    fontSize: '0.55rem',
     fontWeight: 800,
     textTransform: 'uppercase' as const,
-    letterSpacing: '0.1em',
+    letterSpacing: '0.05em',
     textAlign: 'left' as const
   },
   td: {
-    padding: '0.75rem',
+    padding: '0.5rem 0.25rem',
     borderBottom: '1px solid #f3f4f6',
-    verticalAlign: 'top' as const
+    verticalAlign: 'top' as const,
+    wordBreak: 'break-word' as const,
+    fontSize: '0.75rem'
   },
   totalsContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginBottom: '1.5rem'
+    marginBottom: '1rem'
   },
   totalsBox: {
-    width: '250px'
+    width: '100%',
+    maxWidth: '220px'
   },
   totalRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '0.5rem 0',
-    borderBottom: '1px solid #f3f4f6'
+    padding: '0.35rem 0',
+    borderBottom: '1px solid #f3f4f6',
+    fontSize: '0.75rem'
   },
   totalFinal: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '0.75rem 0',
+    padding: '0.5rem 0',
     borderTop: '3px double #111827',
-    marginTop: '0.5rem'
+    marginTop: '0.35rem'
   },
   totalLabel: {
-    fontSize: '0.625rem',
+    fontSize: '0.6rem',
     fontWeight: 800,
     color: '#9ca3af',
     textTransform: 'uppercase' as const
   },
   totalValue: {
     fontWeight: 800,
-    color: '#111827'
+    color: '#111827',
+    fontSize: '0.8rem'
   },
   totalFinalValue: {
-    fontSize: '1.5rem',
+    fontSize: '1.1rem',
     fontWeight: 900,
     color: '#111827'
   },
   notesSection: {
-    marginTop: '1.5rem',
-    paddingTop: '1rem',
+    marginTop: '1rem',
+    paddingTop: '0.75rem',
     borderTop: '1px solid #e5e7eb'
   },
   addItemBtn: {
@@ -750,50 +766,64 @@ const InvoiceEditorPage: React.FC = () => {
     const element = document.querySelector('.invoice-print') as HTMLElement;
     if (!element) return null;
 
-    // Store original styles to restore later
-    const originalStyle = element.getAttribute('style') || '';
-    const originalWidth = element.style.width;
-    const originalTransform = element.style.transform;
-    const originalMaxWidth = element.style.maxWidth;
+    // Clone element for PDF generation to avoid affecting the UI
+    const clone = element.cloneNode(true) as HTMLElement;
+    
+    // Remove no-print elements from clone
+    clone.querySelectorAll('.no-print').forEach(el => el.remove());
+    
+    // Apply PDF-specific styles to clone
+    clone.style.cssText = `
+      width: 794px !important;
+      max-width: 794px !important;
+      padding: 24px !important;
+      margin: 0 !important;
+      transform: none !important;
+      background: white !important;
+      font-size: 12px !important;
+      box-sizing: border-box !important;
+      overflow: visible !important;
+    `;
 
-    // Hide no-print elements
-    const noPrintElements = element.querySelectorAll('.no-print');
-    noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
+    // Make print-only descriptions visible in clone
+    clone.querySelectorAll('.print-only-description').forEach(el => {
+      (el as HTMLElement).style.display = 'block';
+    });
+    clone.querySelectorAll('.screen-only-textarea').forEach(el => {
+      (el as HTMLElement).style.display = 'none';
+    });
 
-    // Reset any print-specific transforms for accurate PDF capture
-    element.style.transform = 'none';
-    element.style.width = '210mm';
-    element.style.maxWidth = '210mm';
+    // Temporarily add clone to document
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    document.body.appendChild(clone);
 
     const opt = {
-      margin: [8, 8, 8, 8] as [number, number, number, number],
+      margin: [5, 5, 5, 5] as [number, number, number, number],
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
-      image: { type: 'jpeg' as const, quality: 0.95 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { 
         scale: 2,
         useCORS: true,
         letterRendering: true,
-        width: 794, // A4 width in pixels at 96 DPI
-        windowWidth: 794
+        width: 794,
+        windowWidth: 794,
+        scrollY: 0,
+        scrollX: 0
       },
-      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
+      pagebreak: { mode: 'avoid-all' as const }
     };
 
     try {
-      const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+      const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
       return pdfBlob;
     } catch (error) {
       console.error('Error generating PDF:', error);
       return null;
     } finally {
-      // Restore original styles
-      element.style.transform = originalTransform;
-      element.style.width = originalWidth;
-      element.style.maxWidth = originalMaxWidth;
-      if (originalStyle) {
-        element.setAttribute('style', originalStyle);
-      }
-      noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
+      document.body.removeChild(clone);
     }
   };
 
@@ -801,45 +831,63 @@ const InvoiceEditorPage: React.FC = () => {
     const element = document.querySelector('.invoice-print') as HTMLElement;
     if (!element) return;
 
-    // Store original styles
-    const originalTransform = element.style.transform;
-    const originalWidth = element.style.width;
-    const originalMaxWidth = element.style.maxWidth;
+    // Clone element for PDF generation
+    const clone = element.cloneNode(true) as HTMLElement;
+    
+    // Remove no-print elements from clone
+    clone.querySelectorAll('.no-print').forEach(el => el.remove());
+    
+    // Apply PDF-specific styles to clone
+    clone.style.cssText = `
+      width: 794px !important;
+      max-width: 794px !important;
+      padding: 24px !important;
+      margin: 0 !important;
+      transform: none !important;
+      background: white !important;
+      font-size: 12px !important;
+      box-sizing: border-box !important;
+      overflow: visible !important;
+    `;
 
-    // Hide no-print elements
-    const noPrintElements = element.querySelectorAll('.no-print');
-    noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
+    // Make print-only descriptions visible in clone
+    clone.querySelectorAll('.print-only-description').forEach(el => {
+      (el as HTMLElement).style.display = 'block';
+    });
+    clone.querySelectorAll('.screen-only-textarea').forEach(el => {
+      (el as HTMLElement).style.display = 'none';
+    });
 
-    // Reset transforms for PDF capture
-    element.style.transform = 'none';
-    element.style.width = '210mm';
-    element.style.maxWidth = '210mm';
+    // Temporarily add clone to document
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    document.body.appendChild(clone);
 
     const opt = {
-      margin: [8, 8, 8, 8] as [number, number, number, number],
+      margin: [5, 5, 5, 5] as [number, number, number, number],
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
-      image: { type: 'jpeg' as const, quality: 0.95 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { 
         scale: 2,
         useCORS: true,
         letterRendering: true,
         width: 794,
-        windowWidth: 794
+        windowWidth: 794,
+        scrollY: 0,
+        scrollX: 0
       },
-      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
+      pagebreak: { mode: 'avoid-all' as const }
     };
 
     try {
-      await html2pdf().set(opt).from(element).save();
+      await html2pdf().set(opt).from(clone).save();
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Erro ao gerar PDF. Tente novamente.');
     } finally {
-      // Restore original styles
-      element.style.transform = originalTransform;
-      element.style.width = originalWidth;
-      element.style.maxWidth = originalMaxWidth;
-      noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
+      document.body.removeChild(clone);
     }
   };
 
@@ -1173,14 +1221,14 @@ const InvoiceEditorPage: React.FC = () => {
           />
         </div>
 
-        {/* Items Table - Compact for PDF */}
+        {/* Items Table - Mobile Optimized */}
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={{ ...styles.th, width: '55%' }}>Descrição</th>
-              <th style={{ ...styles.th, textAlign: 'center', width: '10%' }}>Qtd</th>
-              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Preço</th>
-              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Total</th>
+              <th style={{ ...styles.th, width: '45%' }}>Descrição</th>
+              <th style={{ ...styles.th, textAlign: 'center', width: '12%' }}>Qtd</th>
+              <th style={{ ...styles.th, textAlign: 'right', width: '18%' }}>Preço</th>
+              <th style={{ ...styles.th, textAlign: 'right', width: '20%' }}>Total</th>
               <th style={{ ...styles.th, width: '5%' }} className="no-print"></th>
             </tr>
           </thead>
@@ -1193,9 +1241,9 @@ const InvoiceEditorPage: React.FC = () => {
                     className="print-only-description"
                     style={{ 
                       whiteSpace: 'pre-wrap',
-                      wordBreak: 'normal',
-                      fontSize: '0.875rem',
-                      lineHeight: '1.5'
+                      wordBreak: 'break-word',
+                      fontSize: '0.7rem',
+                      lineHeight: '1.4'
                     }}
                   >
                     {item.description || ''}
@@ -1204,31 +1252,31 @@ const InvoiceEditorPage: React.FC = () => {
                   <AutoResizeTextarea
                     value={item.description}
                     onChange={(val) => handleItemChange(item.id, 'description', val)}
-                    placeholder="Descrição do serviço ou produto detalhado..."
+                    placeholder="Descrição..."
                     className="input-ghost invoice-description screen-only-textarea"
-                    style={{ width: '100%', minHeight: '48px', fontSize: '0.875rem' }}
+                    style={{ width: '100%', minHeight: '36px', fontSize: '0.75rem' }}
                   />
                 </td>
-                <td style={{ ...styles.td, textAlign: 'center' }}>
+                <td style={{ ...styles.td, textAlign: 'center', padding: '0.25rem' }}>
                   <input
                     type="number"
-                    style={{ ...styles.inputGhost, width: '50px', textAlign: 'center', fontWeight: 600 }}
+                    style={{ ...styles.inputGhost, width: '100%', maxWidth: '40px', textAlign: 'center', fontWeight: 600, fontSize: '0.75rem' }}
                     value={item.quantity}
                     onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
                   />
                 </td>
-                <td style={{ ...styles.td, textAlign: 'right' }}>
+                <td style={{ ...styles.td, textAlign: 'right', padding: '0.25rem' }}>
                   <input
                     type="number"
-                    style={{ ...styles.inputGhost, width: '80px', textAlign: 'right', fontWeight: 600 }}
+                    style={{ ...styles.inputGhost, width: '100%', maxWidth: '60px', textAlign: 'right', fontWeight: 600, fontSize: '0.75rem' }}
                     value={item.rate}
                     onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
                   />
                 </td>
-                <td style={{ ...styles.td, textAlign: 'right', fontWeight: 700 }}>
+                <td style={{ ...styles.td, textAlign: 'right', fontWeight: 700, fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
                   {invoice.currency} {formatCurrency(item.total)}
                 </td>
-                <td style={styles.td} className="no-print">
+                <td style={{ ...styles.td, padding: '0.25rem' }} className="no-print">
                   <button onClick={() => handleRemoveItem(item.id)} style={styles.removeBtn}>
                     ✕
                   </button>
