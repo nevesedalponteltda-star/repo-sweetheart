@@ -42,7 +42,7 @@ const styles = {
     textDecoration: 'none'
   },
   logoImg: {
-    height: '28px',
+    height: '40px',
     width: 'auto'
   },
   nav: {
