@@ -151,7 +151,8 @@ input:focus, textarea:focus, select:focus {
   }
   
   /* Description column - natural text flow like the system */
-  .invoice-description-cell {
+  .invoice-description-cell,
+  .invoice-address-cell {
     white-space: pre-wrap !important;
     word-break: normal !important;
     overflow-wrap: break-word !important;

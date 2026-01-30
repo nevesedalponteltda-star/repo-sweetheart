@@ -862,12 +862,33 @@ const InvoiceEditorPage: React.FC = () => {
               value={invoice.company.name}
               onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
             />
-            <input
-              style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
-              placeholder="Endereço"
-              value={invoice.company.address}
-              onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
-            />
+            <div className="invoice-address-cell">
+              <textarea
+                className="screen-only-textarea"
+                style={{ 
+                  ...styles.inputGhost, 
+                  color: '#6b7280', 
+                  fontSize: '0.75rem',
+                  resize: 'none',
+                  minHeight: '20px',
+                  overflow: 'hidden',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word'
+                }}
+                placeholder="Endereço"
+                value={invoice.company.address}
+                onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
+                rows={1}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = 'auto';
+                  target.style.height = target.scrollHeight + 'px';
+                }}
+              />
+              <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
+                {invoice.company.address}
+              </div>
+            </div>
             <input
               style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
               placeholder="email@empresa.com | Telefone"
