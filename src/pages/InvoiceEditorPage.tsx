@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { createRoot } from 'react-dom/client';
 import { supabase } from '@/src/integrations/supabase/client';
 import { InvoiceStatus, Invoice, InvoiceItem, Client } from '@/src/types';
 import html2pdf from 'html2pdf.js';
-import InvoicePrintLayout from '@/src/components/InvoicePrintLayout';
+import { generateInvoiceHtml } from '@/src/utils/invoicePdfGenerator';
 
 const AutoResizeTextarea: React.FC<{
   value: string;
@@ -856,26 +855,15 @@ const InvoiceEditorPage: React.FC = () => {
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
   const generatePdfBlob = async (): Promise<Blob | null> => {
-    // Create a temporary container for the print layout
+    // Create a temporary container with the invoice HTML
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
     tempContainer.style.width = '210mm';
     tempContainer.style.backgroundColor = 'white';
+    tempContainer.innerHTML = generateInvoiceHtml(invoice);
     document.body.appendChild(tempContainer);
-
-    // Render the print layout component
-    const root = createRoot(tempContainer);
-    root.render(
-      <InvoicePrintLayout 
-        invoice={invoice} 
-        formatCurrency={formatCurrency} 
-      />
-    );
-
-    // Wait for React to render
-    await new Promise(resolve => setTimeout(resolve, 100));
 
     const opt = {
       margin: [5, 5, 5, 5],
@@ -897,12 +885,10 @@ const InvoiceEditorPage: React.FC = () => {
 
     try {
       const pdfBlob = await html2pdf().set(opt).from(tempContainer).outputPdf('blob');
-      root.unmount();
       document.body.removeChild(tempContainer);
       return pdfBlob;
     } catch (err) {
       console.error('Error generating PDF:', err);
-      root.unmount();
       document.body.removeChild(tempContainer);
       return null;
     }
