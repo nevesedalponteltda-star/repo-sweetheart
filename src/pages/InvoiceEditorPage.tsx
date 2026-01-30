@@ -746,22 +746,35 @@ const InvoiceEditorPage: React.FC = () => {
     window.print();
   };
 
-  const generatePDF = async (): Promise<Blob | null> => {
+  const generatePDFBlob = async (): Promise<Blob | null> => {
     const element = document.querySelector('.invoice-print') as HTMLElement;
     if (!element) return null;
 
-    // Hide no-print elements temporarily
+    // Store original styles to restore later
+    const originalStyle = element.getAttribute('style') || '';
+    const originalWidth = element.style.width;
+    const originalTransform = element.style.transform;
+    const originalMaxWidth = element.style.maxWidth;
+
+    // Hide no-print elements
     const noPrintElements = element.querySelectorAll('.no-print');
     noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
 
+    // Reset any print-specific transforms for accurate PDF capture
+    element.style.transform = 'none';
+    element.style.width = '210mm';
+    element.style.maxWidth = '210mm';
+
     const opt = {
-      margin: 5,
+      margin: [8, 8, 8, 8] as [number, number, number, number],
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
-      image: { type: 'jpeg' as const, quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.95 },
       html2canvas: { 
-        scale: 2, 
+        scale: 2,
         useCORS: true,
-        letterRendering: true 
+        letterRendering: true,
+        width: 794, // A4 width in pixels at 96 DPI
+        windowWidth: 794
       },
       jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
     };
@@ -773,7 +786,13 @@ const InvoiceEditorPage: React.FC = () => {
       console.error('Error generating PDF:', error);
       return null;
     } finally {
-      // Restore no-print elements
+      // Restore original styles
+      element.style.transform = originalTransform;
+      element.style.width = originalWidth;
+      element.style.maxWidth = originalMaxWidth;
+      if (originalStyle) {
+        element.setAttribute('style', originalStyle);
+      }
       noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
     }
   };
@@ -782,18 +801,30 @@ const InvoiceEditorPage: React.FC = () => {
     const element = document.querySelector('.invoice-print') as HTMLElement;
     if (!element) return;
 
-    // Hide no-print elements temporarily
+    // Store original styles
+    const originalTransform = element.style.transform;
+    const originalWidth = element.style.width;
+    const originalMaxWidth = element.style.maxWidth;
+
+    // Hide no-print elements
     const noPrintElements = element.querySelectorAll('.no-print');
     noPrintElements.forEach(el => (el as HTMLElement).style.display = 'none');
 
+    // Reset transforms for PDF capture
+    element.style.transform = 'none';
+    element.style.width = '210mm';
+    element.style.maxWidth = '210mm';
+
     const opt = {
-      margin: 5,
+      margin: [8, 8, 8, 8] as [number, number, number, number],
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
-      image: { type: 'jpeg' as const, quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.95 },
       html2canvas: { 
-        scale: 2, 
+        scale: 2,
         useCORS: true,
-        letterRendering: true 
+        letterRendering: true,
+        width: 794,
+        windowWidth: 794
       },
       jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
     };
@@ -804,34 +835,39 @@ const InvoiceEditorPage: React.FC = () => {
       console.error('Error generating PDF:', error);
       alert('Erro ao gerar PDF. Tente novamente.');
     } finally {
-      // Restore no-print elements
+      // Restore original styles
+      element.style.transform = originalTransform;
+      element.style.width = originalWidth;
+      element.style.maxWidth = originalMaxWidth;
       noPrintElements.forEach(el => (el as HTMLElement).style.display = '');
     }
   };
 
   const handleShareWhatsApp = async () => {
-    // First download the PDF, then open WhatsApp with a message
+    // Download PDF first
     await handleDownloadPDF();
     
-    const message = encodeURIComponent(
-      `Olá! Segue a fatura ${invoice.invoiceNumber} no valor de ${formatCurrency(invoice.total)}.\n\nPor favor, confira o PDF anexado.`
-    );
-    
-    // Open WhatsApp with pre-filled message
-    window.open(`https://wa.me/?text=${message}`, '_blank');
+    // Small delay to ensure download started
+    setTimeout(() => {
+      const message = encodeURIComponent(
+        `Olá! Segue a fatura ${invoice.invoiceNumber} no valor de ${formatCurrency(invoice.total)}.\n\nPor favor, confira o PDF anexado.`
+      );
+      window.open(`https://wa.me/?text=${message}`, '_blank');
+    }, 500);
   };
 
   const handleShareEmail = async () => {
-    // First download the PDF
+    // Download PDF first
     await handleDownloadPDF();
     
-    const subject = encodeURIComponent(`Fatura ${invoice.invoiceNumber}`);
-    const body = encodeURIComponent(
-      `Olá,\n\nSegue em anexo a fatura ${invoice.invoiceNumber}.\n\nDetalhes:\n- Número: ${invoice.invoiceNumber}\n- Cliente: ${invoice.client.name}\n- Valor Total: ${formatCurrency(invoice.total)}\n- Vencimento: ${formatDate(invoice.dueDate)}\n\nPor favor, encontre o PDF anexado a este email.\n\nAtenciosamente,\n${invoice.company.name}`
-    );
-    
-    // Open email client with pre-filled content
-    window.location.href = `mailto:${invoice.client.email || ''}?subject=${subject}&body=${body}`;
+    // Small delay to ensure download started
+    setTimeout(() => {
+      const subject = encodeURIComponent(`Fatura ${invoice.invoiceNumber}`);
+      const body = encodeURIComponent(
+        `Olá,\n\nSegue em anexo a fatura ${invoice.invoiceNumber}.\n\nDetalhes:\n- Número: ${invoice.invoiceNumber}\n- Cliente: ${invoice.client.name}\n- Valor Total: ${formatCurrency(invoice.total)}\n- Vencimento: ${formatDate(invoice.dueDate)}\n\nPor favor, encontre o PDF anexado a este email.\n\nAtenciosamente,\n${invoice.company.name}`
+      );
+      window.location.href = `mailto:${invoice.client.email || ''}?subject=${subject}&body=${body}`;
+    }, 500);
   };
 
   const formatDate = (dateStr: string) => {
