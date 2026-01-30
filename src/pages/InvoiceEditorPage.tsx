@@ -1192,16 +1192,16 @@ const InvoiceEditorPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Notes - Compact */}
-        {(invoice.notes || invoice.terms) && (
-          <div style={styles.notesSection}>
-            {invoice.notes && (
+        {/* Notes - Compact - Only show in print if there's content */}
+        {(invoice.notes?.trim() || invoice.terms?.trim()) && (
+          <div style={styles.notesSection} className="invoice-notes">
+            {invoice.notes?.trim() && (
               <div style={{ marginBottom: '0.75rem' }}>
                 <p style={{ ...styles.labelSmall, marginBottom: '0.25rem' }}>Observações:</p>
                 <p style={{ fontSize: '0.75rem', color: '#4b5563', whiteSpace: 'pre-wrap' }}>{invoice.notes}</p>
               </div>
             )}
-            {invoice.terms && (
+            {invoice.terms?.trim() && (
               <div>
                 <p style={{ ...styles.labelSmall, marginBottom: '0.25rem' }}>Termos:</p>
                 <p style={{ fontSize: '0.625rem', color: '#9ca3af', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>{invoice.terms}</p>
