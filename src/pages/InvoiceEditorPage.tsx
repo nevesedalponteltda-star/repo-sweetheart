@@ -857,23 +857,36 @@ const InvoiceEditorPage: React.FC = () => {
   const generatePdfBlob = async (): Promise<Blob | null> => {
     // Create a temporary container with the invoice HTML
     const tempContainer = document.createElement('div');
+    tempContainer.id = 'pdf-render-container';
+    // Make it visible for html2canvas to capture properly
     tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '-9999px';
+    tempContainer.style.left = '0';
     tempContainer.style.top = '0';
-    tempContainer.style.width = '210mm';
+    tempContainer.style.width = '794px'; // A4 width at 96dpi
     tempContainer.style.backgroundColor = 'white';
-    tempContainer.innerHTML = generateInvoiceHtml(invoice);
+    tempContainer.style.zIndex = '9999';
+    tempContainer.style.padding = '0';
+    tempContainer.style.margin = '0';
+    
+    const htmlContent = generateInvoiceHtml(invoice);
+    tempContainer.innerHTML = htmlContent;
     document.body.appendChild(tempContainer);
+    
+    // Wait for DOM to fully render
+    await new Promise(resolve => setTimeout(resolve, 200));
 
     const opt = {
-      margin: [5, 5, 5, 5],
+      margin: 0,
       filename: `Fatura_${invoice.invoiceNumber}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
         scale: 2, 
         useCORS: true,
         letterRendering: true,
-        logging: false
+        logging: false,
+        backgroundColor: '#ffffff',
+        width: 794,
+        windowWidth: 794
       },
       jsPDF: { 
         unit: 'mm', 
@@ -889,7 +902,9 @@ const InvoiceEditorPage: React.FC = () => {
       return pdfBlob;
     } catch (err) {
       console.error('Error generating PDF:', err);
-      document.body.removeChild(tempContainer);
+      if (document.getElementById('pdf-render-container')) {
+        document.body.removeChild(tempContainer);
+      }
       return null;
     }
   };
