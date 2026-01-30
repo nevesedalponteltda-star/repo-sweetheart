@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import { supabase } from '@/src/integrations/supabase/client';
 import { InvoiceStatus, Invoice, InvoiceItem, Client } from '@/src/types';
 import html2pdf from 'html2pdf.js';
+import InvoicePrintLayout from '@/src/components/InvoicePrintLayout';
 
 const AutoResizeTextarea: React.FC<{
   value: string;
@@ -854,57 +856,26 @@ const InvoiceEditorPage: React.FC = () => {
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
   const generatePdfBlob = async (): Promise<Blob | null> => {
-    const element = document.querySelector('.invoice-print') as HTMLElement;
-    if (!element) return null;
-
-    // Clone the element for PDF generation
-    const clone = element.cloneNode(true) as HTMLElement;
-    
-    // Hide no-print elements and show print-only elements
-    clone.querySelectorAll('.no-print').forEach((el) => {
-      (el as HTMLElement).style.display = 'none';
-    });
-    clone.querySelectorAll('.screen-only-textarea').forEach((el) => {
-      (el as HTMLElement).style.display = 'none';
-    });
-    clone.querySelectorAll('.print-only-description').forEach((el) => {
-      (el as HTMLElement).style.display = 'block';
-    });
-    
-    // Apply print styles inline for PDF
-    clone.style.boxShadow = 'none';
-    clone.style.border = 'none';
-    clone.style.borderRadius = '0';
-    clone.style.padding = '8mm';
-    clone.style.margin = '0';
-    clone.style.width = '210mm';
-    clone.style.maxWidth = '210mm';
-    clone.style.minHeight = 'auto';
-    clone.style.fontSize = '11px';
-    clone.style.backgroundColor = 'white';
-    
-    // Style table header for print colors
-    clone.querySelectorAll('th').forEach((th) => {
-      (th as HTMLElement).style.backgroundColor = '#1e293b';
-      (th as HTMLElement).style.color = 'white';
-      (th as HTMLElement).style.printColorAdjust = 'exact';
-      (th as HTMLElement).style.setProperty('-webkit-print-color-adjust', 'exact');
-    });
-    
-    // Style inputs to look like text
-    clone.querySelectorAll('input, textarea, select').forEach((el) => {
-      (el as HTMLElement).style.border = 'none';
-      (el as HTMLElement).style.background = 'transparent';
-      (el as HTMLElement).style.padding = '0';
-    });
-
-    // Create temporary container
+    // Create a temporary container for the print layout
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
-    tempContainer.appendChild(clone);
+    tempContainer.style.width = '210mm';
+    tempContainer.style.backgroundColor = 'white';
     document.body.appendChild(tempContainer);
+
+    // Render the print layout component
+    const root = createRoot(tempContainer);
+    root.render(
+      <InvoicePrintLayout 
+        invoice={invoice} 
+        formatCurrency={formatCurrency} 
+      />
+    );
+
+    // Wait for React to render
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     const opt = {
       margin: [5, 5, 5, 5],
@@ -925,11 +896,13 @@ const InvoiceEditorPage: React.FC = () => {
     };
 
     try {
-      const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
+      const pdfBlob = await html2pdf().set(opt).from(tempContainer).outputPdf('blob');
+      root.unmount();
       document.body.removeChild(tempContainer);
       return pdfBlob;
     } catch (err) {
       console.error('Error generating PDF:', err);
+      root.unmount();
       document.body.removeChild(tempContainer);
       return null;
     }
