@@ -206,8 +206,98 @@ const styles = {
   gridMobile: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '1.5rem',
+    gap: '1rem',
     marginBottom: '1.5rem'
+  },
+  mobileSection: {
+    backgroundColor: '#f9fafb',
+    borderRadius: '0.75rem',
+    padding: '1rem',
+    marginBottom: '0.75rem'
+  },
+  mobileSectionTitle: {
+    fontSize: '0.625rem',
+    fontWeight: 800,
+    color: '#6b7280',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em',
+    marginBottom: '0.75rem',
+    paddingBottom: '0.5rem',
+    borderBottom: '1px solid #e5e7eb'
+  },
+  mobileFieldGroup: {
+    marginBottom: '0.75rem'
+  },
+  mobileFieldLabel: {
+    fontSize: '0.625rem',
+    fontWeight: 700,
+    color: '#9ca3af',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+    marginBottom: '0.25rem',
+    display: 'block'
+  },
+  mobileInput: {
+    width: '100%',
+    padding: '0.625rem 0.75rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '0.5rem',
+    fontSize: '0.875rem',
+    color: '#111827',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  },
+  mobileInputLarge: {
+    fontSize: '1rem',
+    fontWeight: 700,
+    padding: '0.75rem'
+  },
+  mobileDateRow: {
+    display: 'flex',
+    gap: '0.75rem',
+    marginBottom: '0.5rem'
+  },
+  mobileDateField: {
+    flex: 1
+  },
+  mobileStatusBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.375rem 0.75rem',
+    borderRadius: '9999px',
+    fontSize: '0.75rem',
+    fontWeight: 700
+  },
+  mobileItemCard: {
+    backgroundColor: '#f9fafb',
+    borderRadius: '0.75rem',
+    padding: '1rem',
+    marginBottom: '0.75rem',
+    border: '1px solid #e5e7eb'
+  },
+  mobileItemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '0.75rem'
+  },
+  mobileItemRow: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginBottom: '0.5rem'
+  },
+  mobileItemField: {
+    flex: 1
+  },
+  mobileItemTotal: {
+    fontSize: '1rem',
+    fontWeight: 800,
+    color: '#111827',
+    textAlign: 'right' as const,
+    marginTop: '0.5rem',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid #e5e7eb'
   },
   section: {
     marginBottom: '1rem'
@@ -910,216 +1000,440 @@ const InvoiceEditorPage: React.FC = () => {
 
         <div style={styles.divider}></div>
 
-        {/* Info Grid */}
-        <div style={isMobile ? styles.gridMobile : styles.grid}>
-          <div>
-            <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>DE:</p>
-            <input
-              style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
-              placeholder="SUA EMPRESA"
-              value={invoice.company.name}
-              onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
-            />
-            <div className="invoice-address-cell">
-              <textarea
-                className="screen-only-textarea"
-                style={{ 
-                  ...styles.inputGhost, 
-                  color: '#6b7280', 
-                  fontSize: '0.75rem',
-                  resize: 'none',
-                  minHeight: '20px',
-                  overflow: 'hidden',
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-word'
-                }}
-                placeholder="Endereço"
-                value={invoice.company.address}
-                onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
-                rows={1}
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = 'auto';
-                  target.style.height = target.scrollHeight + 'px';
-                }}
-              />
-              <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
-                {invoice.company.address}
+        {/* Info Grid - Mobile Layout */}
+        {isMobile ? (
+          <div style={styles.gridMobile}>
+            {/* Mobile: Datas e Status */}
+            <div style={styles.mobileSection}>
+              <div style={styles.mobileSectionTitle}>📅 Datas & Status</div>
+              <div style={styles.mobileDateRow}>
+                <div style={styles.mobileDateField}>
+                  <label style={styles.mobileFieldLabel}>Emissão</label>
+                  <input
+                    type="date"
+                    style={styles.mobileInput}
+                    value={invoice.date}
+                    onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
+                  />
+                </div>
+                <div style={styles.mobileDateField}>
+                  <label style={styles.mobileFieldLabel}>Vencimento</label>
+                  <input
+                    type="date"
+                    style={styles.mobileInput}
+                    value={invoice.dueDate}
+                    onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={styles.mobileFieldLabel}>Status:</span>
+                <span style={{ 
+                  ...styles.mobileStatusBadge,
+                  backgroundColor: invoice.status === InvoiceStatus.PAID ? '#dcfce7' : '#dbeafe',
+                  color: invoice.status === InvoiceStatus.PAID ? '#16a34a' : '#2563eb'
+                }}>
+                  {invoice.status}
+                </span>
               </div>
             </div>
-            <div className="invoice-address-cell">
-              <input
-                className="screen-only-textarea"
-                style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
-                placeholder="email@empresa.com | Telefone"
-                value={`${invoice.company.email}${invoice.company.phone ? ' | ' + invoice.company.phone : ''}`}
-                onChange={(e) => {
-                  const parts = e.target.value.split(' | ');
-                  setInvoice({ 
-                    ...invoice, 
-                    company: { 
-                      ...invoice.company, 
-                      email: parts[0] || '',
-                      phone: parts[1] || ''
-                    } 
-                  });
-                }}
-              />
-              <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
-                {invoice.company.email}{invoice.company.phone ? ' | ' + invoice.company.phone : ''}
+
+            {/* Mobile: Empresa (DE) */}
+            <div style={styles.mobileSection}>
+              <div style={styles.mobileSectionTitle}>🏢 Sua Empresa (DE)</div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Nome da Empresa</label>
+                <input
+                  style={{ ...styles.mobileInput, ...styles.mobileInputLarge }}
+                  placeholder="Nome da sua empresa"
+                  value={invoice.company.name}
+                  onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
+                />
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Endereço Completo</label>
+                <textarea
+                  style={{ ...styles.mobileInput, minHeight: '60px', resize: 'none' }}
+                  placeholder="Rua, número, bairro, cidade - estado"
+                  value={invoice.company.address}
+                  onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
+                  rows={2}
+                />
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Email</label>
+                <input
+                  type="email"
+                  style={styles.mobileInput}
+                  placeholder="contato@empresa.com"
+                  value={invoice.company.email}
+                  onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, email: e.target.value } })}
+                />
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Telefone</label>
+                <input
+                  type="tel"
+                  style={styles.mobileInput}
+                  placeholder="(00) 00000-0000"
+                  value={invoice.company.phone}
+                  onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, phone: e.target.value } })}
+                />
+              </div>
+            </div>
+
+            {/* Mobile: Cliente (PARA) */}
+            <div style={styles.mobileSection}>
+              <div style={styles.mobileSectionTitle}>👤 Cliente (PARA)</div>
+              <div style={{ ...styles.mobileFieldGroup, position: 'relative' }}>
+                <label style={styles.mobileFieldLabel}>Nome do Cliente</label>
+                <input
+                  style={{ ...styles.mobileInput, ...styles.mobileInputLarge }}
+                  placeholder="Selecione ou digite o nome"
+                  value={invoice.client.name}
+                  onChange={(e) => {
+                    setInvoice({ ...invoice, client: { ...invoice.client, name: e.target.value } });
+                    setClientSearch(e.target.value);
+                    setShowClientDropdown(true);
+                  }}
+                  onFocus={() => setShowClientDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowClientDropdown(false), 200)}
+                />
+                {showClientDropdown && filteredClients.length > 0 && (
+                  <div style={{ ...styles.clientDropdown, top: '100%', marginTop: '4px' }} className="no-print">
+                    {filteredClients.map(client => (
+                      <div
+                        key={client.id}
+                        style={styles.clientOption}
+                        onClick={() => handleSelectClient(client)}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                      >
+                        <div style={{ fontWeight: 600 }}>{client.name}</div>
+                        {client.email && <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{client.email}</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Endereço do Cliente</label>
+                <textarea
+                  style={{ ...styles.mobileInput, minHeight: '60px', resize: 'none' }}
+                  placeholder="Endereço completo do cliente"
+                  value={invoice.client.address}
+                  onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, address: e.target.value } })}
+                  rows={2}
+                />
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Email do Cliente</label>
+                <input
+                  type="email"
+                  style={styles.mobileInput}
+                  placeholder="cliente@email.com"
+                  value={invoice.client.email}
+                  onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, email: e.target.value } })}
+                />
+              </div>
+              <div style={styles.mobileFieldGroup}>
+                <label style={styles.mobileFieldLabel}>Telefone do Cliente</label>
+                <input
+                  type="tel"
+                  style={styles.mobileInput}
+                  placeholder="(00) 00000-0000"
+                  value={invoice.client.phone}
+                  onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, phone: e.target.value } })}
+                />
               </div>
             </div>
           </div>
-          <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
-            <div style={{ marginBottom: '0.5rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '0.25rem' : '0.5rem', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
-              <span style={styles.labelSmall}>Emissão: </span>
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.date)}</span>
-              <input
-                type="date"
-                style={{ ...styles.inputGhost, width: isMobile ? '100%' : '130px', textAlign: isMobile ? 'left' : 'right' }}
-                value={invoice.date}
-                onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
-                className="no-print"
-              />
-            </div>
-            <div style={{ marginBottom: '0.5rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '0.25rem' : '0.5rem', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
-              <span style={styles.labelSmall}>Vencimento: </span>
-              <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{formatDate(invoice.dueDate)}</span>
-              <input
-                type="date"
-                style={{ ...styles.inputGhost, width: isMobile ? '100%' : '130px', textAlign: isMobile ? 'left' : 'right' }}
-                value={invoice.dueDate}
-                onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
-                className="no-print"
-              />
-            </div>
+        ) : (
+          /* Desktop Layout */
+          <div style={styles.grid}>
             <div>
-              <span style={styles.labelSmall}>Status: </span>
-              <span style={{ 
-                fontWeight: 700, 
-                fontSize: '0.75rem',
-                color: invoice.status === InvoiceStatus.PAID ? '#16a34a' : '#2563eb'
-              }}>
-                {invoice.status}
-              </span>
+              <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>DE:</p>
+              <input
+                style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
+                placeholder="SUA EMPRESA"
+                value={invoice.company.name}
+                onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, name: e.target.value } })}
+              />
+              <div className="invoice-address-cell">
+                <textarea
+                  className="screen-only-textarea"
+                  style={{ 
+                    ...styles.inputGhost, 
+                    color: '#6b7280', 
+                    fontSize: '0.75rem',
+                    resize: 'none',
+                    minHeight: '20px',
+                    overflow: 'hidden',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word'
+                  }}
+                  placeholder="Endereço"
+                  value={invoice.company.address}
+                  onChange={(e) => setInvoice({ ...invoice, company: { ...invoice.company, address: e.target.value } })}
+                  rows={1}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = target.scrollHeight + 'px';
+                  }}
+                />
+                <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
+                  {invoice.company.address}
+                </div>
+              </div>
+              <div className="invoice-address-cell">
+                <input
+                  className="screen-only-textarea"
+                  style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+                  placeholder="email@empresa.com | Telefone"
+                  value={`${invoice.company.email}${invoice.company.phone ? ' | ' + invoice.company.phone : ''}`}
+                  onChange={(e) => {
+                    const parts = e.target.value.split(' | ');
+                    setInvoice({ 
+                      ...invoice, 
+                      company: { 
+                        ...invoice.company, 
+                        email: parts[0] || '',
+                        phone: parts[1] || ''
+                      } 
+                    });
+                  }}
+                />
+                <div className="print-only-description" style={{ color: '#6b7280', fontSize: '0.75rem', lineHeight: 1.4 }}>
+                  {invoice.company.email}{invoice.company.phone ? ' | ' + invoice.company.phone : ''}
+                </div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                <span style={styles.labelSmall}>Emissão: </span>
+                <span style={{ fontWeight: 600, fontSize: '0.875rem' }} className="print-only-description">{formatDate(invoice.date)}</span>
+                <input
+                  type="date"
+                  style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                  value={invoice.date}
+                  onChange={(e) => setInvoice({ ...invoice, date: e.target.value })}
+                  className="no-print"
+                />
+              </div>
+              <div style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                <span style={styles.labelSmall}>Vencimento: </span>
+                <span style={{ fontWeight: 600, fontSize: '0.875rem' }} className="print-only-description">{formatDate(invoice.dueDate)}</span>
+                <input
+                  type="date"
+                  style={{ ...styles.inputGhost, width: '130px', textAlign: 'right' }}
+                  value={invoice.dueDate}
+                  onChange={(e) => setInvoice({ ...invoice, dueDate: e.target.value })}
+                  className="no-print"
+                />
+              </div>
+              <div>
+                <span style={styles.labelSmall}>Status: </span>
+                <span style={{ 
+                  fontWeight: 700, 
+                  fontSize: '0.75rem',
+                  color: invoice.status === InvoiceStatus.PAID ? '#16a34a' : '#2563eb'
+                }}>
+                  {invoice.status}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Client Section with Dropdown */}
-        <div style={{ ...styles.section, position: 'relative', marginBottom: '1.5rem' }}>
-          <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>FATURAR PARA:</p>
-          <div style={{ position: 'relative' }}>
+        {/* Client Section - Desktop only (mobile is handled above) */}
+        {!isMobile && (
+          <div style={{ ...styles.section, position: 'relative', marginBottom: '1.5rem' }}>
+            <p style={{ ...styles.labelSmall, marginBottom: '0.5rem' }}>FATURAR PARA:</p>
+            <div style={{ position: 'relative' }}>
+              <input
+                style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
+                placeholder="SELECIONE OU DIGITE O CLIENTE"
+                value={invoice.client.name}
+                onChange={(e) => {
+                  setInvoice({ ...invoice, client: { ...invoice.client, name: e.target.value } });
+                  setClientSearch(e.target.value);
+                  setShowClientDropdown(true);
+                }}
+                onFocus={() => setShowClientDropdown(true)}
+                onBlur={() => setTimeout(() => setShowClientDropdown(false), 200)}
+              />
+              {showClientDropdown && filteredClients.length > 0 && (
+                <div style={styles.clientDropdown} className="no-print">
+                  {filteredClients.map(client => (
+                    <div
+                      key={client.id}
+                      style={styles.clientOption}
+                      onClick={() => handleSelectClient(client)}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                    >
+                      <div style={{ fontWeight: 600 }}>{client.name}</div>
+                      {client.email && <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{client.email}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <input
-              style={{ ...styles.inputGhost, ...styles.inputLarge, marginBottom: '0.25rem' }}
-              placeholder="SELECIONE OU DIGITE O CLIENTE"
-              value={invoice.client.name}
-              onChange={(e) => {
-                setInvoice({ ...invoice, client: { ...invoice.client, name: e.target.value } });
-                setClientSearch(e.target.value);
-                setShowClientDropdown(true);
-              }}
-              onFocus={() => setShowClientDropdown(true)}
-              onBlur={() => setTimeout(() => setShowClientDropdown(false), 200)}
+              style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
+              placeholder="Endereço do cliente"
+              value={invoice.client.address}
+              onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, address: e.target.value } })}
             />
-            {showClientDropdown && filteredClients.length > 0 && (
-              <div style={styles.clientDropdown} className="no-print">
-                {filteredClients.map(client => (
-                  <div
-                    key={client.id}
-                    style={styles.clientOption}
-                    onClick={() => handleSelectClient(client)}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                  >
-                    <div style={{ fontWeight: 600 }}>{client.name}</div>
-                    {client.email && <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{client.email}</div>}
-                  </div>
-                ))}
-              </div>
-            )}
+            <input
+              style={{ ...styles.inputGhost, color: '#9ca3af', fontSize: '0.75rem' }}
+              placeholder="email@cliente.com"
+              value={invoice.client.email}
+              onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, email: e.target.value } })}
+            />
           </div>
-          <input
-            style={{ ...styles.inputGhost, color: '#6b7280', fontSize: '0.75rem' }}
-            placeholder="Endereço do cliente"
-            value={invoice.client.address}
-            onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, address: e.target.value } })}
-          />
-          <input
-            style={{ ...styles.inputGhost, color: '#9ca3af', fontSize: '0.75rem' }}
-            placeholder="email@cliente.com"
-            value={invoice.client.email}
-            onChange={(e) => setInvoice({ ...invoice, client: { ...invoice.client, email: e.target.value } })}
-          />
-        </div>
+        )}
 
-        {/* Items Table - Compact for PDF */}
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={{ ...styles.th, width: '55%' }}>Descrição</th>
-              <th style={{ ...styles.th, textAlign: 'center', width: '10%' }}>Qtd</th>
-              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Preço</th>
-              <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Total</th>
-              <th style={{ ...styles.th, width: '5%' }} className="no-print"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.items.map((item) => (
-              <tr key={item.id}>
-                <td style={{ ...styles.td, verticalAlign: 'top' }} className="invoice-description-cell">
-                  {/* Print-only text - visible only in print */}
-                  <div 
-                    className="print-only-description"
-                    style={{ 
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'normal',
-                      fontSize: '0.875rem',
-                      lineHeight: '1.5'
-                    }}
-                  >
-                    {item.description || ''}
-                  </div>
-                  {/* Textarea for editing - hidden in print */}
-                  <AutoResizeTextarea
-                    value={item.description}
-                    onChange={(val) => handleItemChange(item.id, 'description', val)}
-                    placeholder="Descrição do serviço ou produto detalhado..."
-                    className="input-ghost invoice-description screen-only-textarea"
-                    style={{ width: '100%', minHeight: '48px', fontSize: '0.875rem' }}
-                  />
-                </td>
-                <td style={{ ...styles.td, textAlign: 'center' }}>
-                  <input
-                    type="number"
-                    style={{ ...styles.inputGhost, width: '50px', textAlign: 'center', fontWeight: 600 }}
-                    value={item.quantity}
-                    onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                  />
-                </td>
-                <td style={{ ...styles.td, textAlign: 'right' }}>
-                  <input
-                    type="number"
-                    style={{ ...styles.inputGhost, width: '80px', textAlign: 'right', fontWeight: 600 }}
-                    value={item.rate}
-                    onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
-                  />
-                </td>
-                <td style={{ ...styles.td, textAlign: 'right', fontWeight: 700 }}>
-                  {invoice.currency} {formatCurrency(item.total)}
-                </td>
-                <td style={styles.td} className="no-print">
-                  <button onClick={() => handleRemoveItem(item.id)} style={styles.removeBtn}>
-                    ✕
+        {/* Items - Mobile Cards or Desktop Table */}
+        {isMobile ? (
+          /* Mobile: Item Cards */
+          <div style={{ marginBottom: '1rem' }}>
+            <div style={styles.mobileSectionTitle}>📦 Itens da Fatura</div>
+            {invoice.items.map((item, index) => (
+              <div key={item.id} style={styles.mobileItemCard}>
+                <div style={styles.mobileItemHeader}>
+                  <span style={{ fontSize: '0.625rem', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase' }}>
+                    Item {index + 1}
+                  </span>
+                  <button onClick={() => handleRemoveItem(item.id)} style={{ ...styles.removeBtn, padding: '0.25rem 0.5rem' }}>
+                    ✕ Remover
                   </button>
-                </td>
-              </tr>
+                </div>
+                <div style={styles.mobileFieldGroup}>
+                  <label style={styles.mobileFieldLabel}>Descrição</label>
+                  <textarea
+                    style={{ ...styles.mobileInput, minHeight: '60px', resize: 'none' }}
+                    placeholder="Descrição do serviço ou produto..."
+                    value={item.description}
+                    onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
+                    rows={2}
+                  />
+                </div>
+                <div style={styles.mobileItemRow}>
+                  <div style={styles.mobileItemField}>
+                    <label style={styles.mobileFieldLabel}>Quantidade</label>
+                    <input
+                      type="number"
+                      style={{ ...styles.mobileInput, textAlign: 'center' }}
+                      value={item.quantity}
+                      onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div style={styles.mobileItemField}>
+                    <label style={styles.mobileFieldLabel}>Preço Unit.</label>
+                    <input
+                      type="number"
+                      style={{ ...styles.mobileInput, textAlign: 'right' }}
+                      value={item.rate}
+                      onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+                </div>
+                <div style={styles.mobileItemTotal}>
+                  Total: {invoice.currency} {formatCurrency(item.total)}
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        ) : (
+          /* Desktop: Table */
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={{ ...styles.th, width: '55%' }}>Descrição</th>
+                <th style={{ ...styles.th, textAlign: 'center', width: '10%' }}>Qtd</th>
+                <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Preço</th>
+                <th style={{ ...styles.th, textAlign: 'right', width: '15%' }}>Total</th>
+                <th style={{ ...styles.th, width: '5%' }} className="no-print"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice.items.map((item) => (
+                <tr key={item.id}>
+                  <td style={{ ...styles.td, verticalAlign: 'top' }} className="invoice-description-cell">
+                    {/* Print-only text - visible only in print */}
+                    <div 
+                      className="print-only-description"
+                      style={{ 
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'normal',
+                        fontSize: '0.875rem',
+                        lineHeight: '1.5'
+                      }}
+                    >
+                      {item.description || ''}
+                    </div>
+                    {/* Textarea for editing - hidden in print */}
+                    <AutoResizeTextarea
+                      value={item.description}
+                      onChange={(val) => handleItemChange(item.id, 'description', val)}
+                      placeholder="Descrição do serviço ou produto detalhado..."
+                      className="input-ghost invoice-description screen-only-textarea"
+                      style={{ width: '100%', minHeight: '48px', fontSize: '0.875rem' }}
+                    />
+                  </td>
+                  <td style={{ ...styles.td, textAlign: 'center' }}>
+                    <input
+                      type="number"
+                      style={{ ...styles.inputGhost, width: '50px', textAlign: 'center', fontWeight: 600 }}
+                      value={item.quantity}
+                      onChange={(e) => handleItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
+                    />
+                  </td>
+                  <td style={{ ...styles.td, textAlign: 'right' }}>
+                    <input
+                      type="number"
+                      style={{ ...styles.inputGhost, width: '80px', textAlign: 'right', fontWeight: 600 }}
+                      value={item.rate}
+                      onChange={(e) => handleItemChange(item.id, 'rate', parseFloat(e.target.value) || 0)}
+                    />
+                  </td>
+                  <td style={{ ...styles.td, textAlign: 'right', fontWeight: 700 }}>
+                    {invoice.currency} {formatCurrency(item.total)}
+                  </td>
+                  <td style={styles.td} className="no-print">
+                    <button onClick={() => handleRemoveItem(item.id)} style={styles.removeBtn}>
+                      ✕
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', position: 'relative' }} className="no-print">
-          <button onClick={handleAddItem} style={styles.addItemBtn}>
+        <div style={{ 
+          display: 'flex', 
+          gap: isMobile ? '0.5rem' : '1rem', 
+          alignItems: 'center', 
+          flexWrap: 'wrap', 
+          position: 'relative',
+          flexDirection: isMobile ? 'column' : 'row'
+        }} className="no-print">
+          <button 
+            onClick={handleAddItem} 
+            style={{ 
+              ...styles.addItemBtn,
+              ...(isMobile ? { 
+                width: '100%', 
+                justifyContent: 'center',
+                backgroundColor: '#eff6ff',
+                padding: '0.75rem',
+                borderRadius: '0.5rem'
+              } : {})
+            }}
+          >
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -1135,10 +1449,20 @@ const InvoiceEditorPage: React.FC = () => {
           </button>
 
           {catalogItems.length > 0 && (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto' }}>
               <button 
                 onClick={() => setShowCatalogDropdown(!showCatalogDropdown)} 
-                style={{ ...styles.addItemBtn, color: '#16a34a' }}
+                style={{ 
+                  ...styles.addItemBtn, 
+                  color: '#16a34a',
+                  ...(isMobile ? { 
+                    width: '100%', 
+                    justifyContent: 'center',
+                    backgroundColor: '#f0fdf4',
+                    padding: '0.75rem',
+                    borderRadius: '0.5rem'
+                  } : {})
+                }}
               >
                 <span style={{ 
                   width: '20px', 
@@ -1156,18 +1480,19 @@ const InvoiceEditorPage: React.FC = () => {
 
               {showCatalogDropdown && (
                 <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
+                  position: isMobile ? 'fixed' : 'absolute',
+                  top: isMobile ? '50%' : '100%',
+                  left: isMobile ? '50%' : 0,
+                  transform: isMobile ? 'translate(-50%, -50%)' : 'none',
                   backgroundColor: '#ffffff',
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px',
                   boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                  zIndex: 50,
-                  width: '300px',
-                  maxHeight: '300px',
+                  zIndex: 100,
+                  width: isMobile ? '90vw' : '300px',
+                  maxHeight: isMobile ? '70vh' : '300px',
                   overflowY: 'auto',
-                  marginTop: '0.5rem'
+                  marginTop: isMobile ? 0 : '0.5rem'
                 }}>
                   <input
                     type="text"
