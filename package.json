@@ -12,7 +12,6 @@
   "dependencies": {
     "@google/genai": "^1.38.0",
     "@supabase/supabase-js": "^2.93.2",
-    "html2pdf.js": "^0.14.0",
     "lovable-tagger": "^1.1.13",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
