@@ -52,7 +52,7 @@ const styles = {
   container: {
     maxWidth: '960px',
     margin: '0 auto',
-    padding: '0 0.5rem',
+    padding: '0 0.75rem',
     paddingBottom: '6rem'
   },
   actionBar: {
@@ -76,62 +76,66 @@ const styles = {
     fontWeight: 700,
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem',
+    gap: '0.25rem',
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.875rem'
+    fontSize: '0.8rem',
+    padding: '0.25rem'
   },
   actionBtns: {
     display: 'flex',
-    gap: '0.5rem',
+    gap: '0.35rem',
     flexWrap: 'wrap' as const,
     justifyContent: 'flex-end',
-    flex: 1
+    alignItems: 'center'
   },
   btnSecondary: {
     backgroundColor: 'transparent',
     color: '#2563eb',
-    padding: '0.4rem 0.75rem',
+    padding: '0.35rem 0.6rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: '2px solid #2563eb',
     cursor: 'pointer',
-    fontSize: '0.7rem',
-    whiteSpace: 'nowrap' as const
+    fontSize: '0.65rem',
+    whiteSpace: 'nowrap' as const,
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.2rem'
   },
   btnPrimary: {
     backgroundColor: '#2563eb',
     color: '#ffffff',
-    padding: '0.4rem 0.75rem',
+    padding: '0.35rem 0.6rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     boxShadow: '0 4px 14px -4px rgba(37, 99, 235, 0.4)',
     whiteSpace: 'nowrap' as const
   },
   btnSuccess: {
     backgroundColor: '#16a34a',
     color: '#ffffff',
-    padding: '0.4rem 0.75rem',
+    padding: '0.35rem 0.6rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     whiteSpace: 'nowrap' as const
   },
   btnWarning: {
     backgroundColor: '#f59e0b',
     color: '#ffffff',
-    padding: '0.4rem 0.75rem',
+    padding: '0.35rem 0.6rem',
     borderRadius: '9999px',
     fontWeight: 700,
     border: 'none',
     cursor: 'pointer',
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     whiteSpace: 'nowrap' as const
   },
   invoiceCard: {
@@ -1000,10 +1004,10 @@ const InvoiceEditorPage: React.FC = () => {
       {/* Action Bar */}
       <div style={styles.actionBar} className="no-print">
         <button onClick={() => navigate('/')} style={styles.backBtn}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Voltar
+          <span>Voltar</span>
         </button>
         <div style={styles.actionBtns}>
           {invoice.status === InvoiceStatus.DRAFT && (
@@ -1023,24 +1027,24 @@ const InvoiceEditorPage: React.FC = () => {
             </button>
           )}
           <button onClick={handleDownloadPDF} style={styles.btnSecondary} title="Baixar PDF">
-            📄 PDF
+            📄
           </button>
           <button 
             onClick={handleShareWhatsApp} 
             style={{ ...styles.btnSecondary, borderColor: '#25d366', color: '#25d366' }}
             title="Compartilhar via WhatsApp"
           >
-            💬 WhatsApp
+            💬
           </button>
           <button 
             onClick={handleShareEmail} 
             style={{ ...styles.btnSecondary, borderColor: '#ea4335', color: '#ea4335' }}
             title="Enviar por Email"
           >
-            ✉️ Email
+            ✉️
           </button>
           <button onClick={handleSave} disabled={saving} style={styles.btnPrimary}>
-            {saving ? 'Salvando...' : 'Salvar'}
+            {saving ? '...' : 'Salvar'}
           </button>
         </div>
       </div>
