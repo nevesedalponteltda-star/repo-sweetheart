@@ -204,54 +204,10 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-/* Mobile Print - uses same scaling as desktop for consistency */
+/* Mobile Print - identical to desktop for consistent output */
 @media print and (max-width: 600px) {
-  .invoice-card {
-    padding: 8mm !important;
-    font-size: 10px !important;
-    min-height: auto !important;
-    max-height: none !important;
-  }
-  
-  .invoice-container {
-    transform: scale(0.78);
-    transform-origin: top left;
-    width: 128% !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  
-  @page {
-    margin: 0;
-    size: A4 portrait;
-  }
-  
-  /* Compact header section */
-  .invoice-header {
-    gap: 0.25rem !important;
-  }
-  
-  /* Smaller table padding */
-  .invoice-table td,
-  .invoice-table th {
-    padding: 4px 6px !important;
-  }
-  
-  /* Description uses full width with natural flow */
-  .invoice-description-cell,
-  .invoice-description,
-  .invoice-address-cell {
-    font-size: 0.75rem !important;
-    line-height: 1.4 !important;
-    white-space: pre-wrap !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
+  /* Mobile uses EXACT same styles as desktop - no special overrides */
+  /* The InvoiceEditorPage inline styles handle everything */
 }
 
 /* Button Styles */
