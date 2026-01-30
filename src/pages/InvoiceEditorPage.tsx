@@ -771,25 +771,31 @@ const InvoiceEditorPage: React.FC = () => {
         @keyframes spin { to { transform: rotate(360deg); } }
         @media print {
           .no-print { display: none !important; }
-          body { 
+          html, body { 
             background: white !important; 
             margin: 0 !important; 
-            padding: 0 !important; 
+            padding: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            overflow: hidden !important;
           }
           #root {
             padding: 0 !important;
             margin: 0 !important;
+            width: 100% !important;
           }
           .invoice-print { 
             box-shadow: none !important; 
             border: none !important; 
-            padding: 8mm !important;
+            border-radius: 0 !important;
+            padding: 10mm !important;
             margin: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
+            width: 128% !important;
+            max-width: none !important;
             transform: scale(0.78);
             transform-origin: top left;
             font-size: 11px !important;
+            min-height: auto !important;
           }
           .invoice-print * {
             line-height: 1.3 !important;
@@ -801,7 +807,7 @@ const InvoiceEditorPage: React.FC = () => {
             font-size: 2rem !important;
           }
           @page { 
-            margin: 2mm; 
+            margin: 0; 
             size: A4; 
           }
         }
